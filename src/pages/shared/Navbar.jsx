@@ -22,7 +22,12 @@ export default function Navbar() {
             <NavLink to="/services" className="">
               Services
             </NavLink>
-            <Link to="why-choose" smooth={true} duration={500}>
+            <Link
+              to="why-choose"
+              smooth={true}
+              duration={500}
+              offset={-80} // (optional) navbar height adjust করার জন্য
+            >
               Why Choose Us
             </Link>
             <NavLink to="/providers" className="">
@@ -34,7 +39,10 @@ export default function Navbar() {
           </nav>
 
           {/* CTA Button */}
-          <button onClick={handleBook} className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-md font-medium">
+          <button
+            onClick={handleBook}
+            className="bg-amber-700 hover:bg-amber-800 text-white px-6 py-2 rounded-md font-medium"
+          >
             Book Appointment
           </button>
         </div>

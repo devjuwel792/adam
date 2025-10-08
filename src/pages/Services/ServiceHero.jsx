@@ -1,6 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import heroImage from "../../assets/images/services/service-hero-image.png";
 
 export function ServiceHero() {
+    const navigate = useNavigate();
+
+  const handleBook = () => {
+    navigate("/schedule");
+  };
   return (
     <section className="bg-gradient-to-b from-white via-[#FAF6ED] via-60% to-[#FAF6ED] to-100% py-16 lg:py-24 mb-52 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +34,7 @@ export function ServiceHero() {
 
             {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-7">
-              <button className="bg-gradient-to-r from-[#877018] to-[#C9A14A] text-white w-64 h-16 rounded-lg font-semibold text-lg">
+              <button onClick={handleBook} className="bg-gradient-to-r from-[#877018] to-[#C9A14A] text-white w-64 h-16 rounded-lg font-semibold text-lg">
                 Book an Appointment
               </button>
             </div>

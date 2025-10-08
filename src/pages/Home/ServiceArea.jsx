@@ -5,6 +5,7 @@ import chicago from "../../assets/images/chicago.png";
 import book from "../../assets/images/book.png";
 import { useState } from "react";
 import { Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const services = [
   {
@@ -51,6 +52,11 @@ export const ServiceArea = () => {
   const [open, setOpen] = useState(false);
   const [rating, setRating] = useState(4);
   const [review, setReview] = useState("");
+  const navigate = useNavigate();
+
+  const handleBook = () => {
+    navigate("/schedule");
+  };
   return (
     <div className="w-full">
       <section className="py-16">
@@ -95,7 +101,7 @@ export const ServiceArea = () => {
         </p>
         <button className="flex items-center justify-center gap-2 bg-white border border-[#E5E7EB] text-[#C9A14A] px-6 py-3 rounded-lg shadow transition">
           <img src={book} alt="" />
-          <p className="text-lg font-semibold">Book an Appointment Now</p>
+          <p onClick={handleBook} className="text-lg font-semibold">Book an Appointment Now</p>
         </button>
       </section>
 

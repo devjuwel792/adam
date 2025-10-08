@@ -2,8 +2,14 @@ import React from "react";
 import { Check, Syringe } from "lucide-react";
 import tube from "../../assets/images/tube.png";
 import dr from "../../assets/images/health-user.png";
+import { useNavigate } from "react-router-dom";
 
 const HealthcareServices = () => {
+    const navigate = useNavigate();
+
+  const handleBook = () => {
+    navigate("/schedule");
+  };
   const services = [
     {
       id: 1,
@@ -156,7 +162,7 @@ const HealthcareServices = () => {
               </div>
 
               {/* Button */}
-              <button className="w-full bg-[#C9A14A] text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
+              <button onClick={handleBook} className="w-full bg-[#C9A14A] text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
                 Book Now
               </button>
             </div>

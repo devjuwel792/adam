@@ -50,7 +50,7 @@ export default function AdminDashboard() {
           currentComponent={currentComponent}
           onMenuClick={handleComponentChange}
         />
-        Sidebar
+        
       </div>
 
       {/* Main Content */}

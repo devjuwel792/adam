@@ -4,11 +4,33 @@ import { FaFilePdf } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
 import { useState } from "react";
 import SelectionDropdown from "./SelectionDropdown";
+import { useGetPendingPhlebotomistDetailsQuery, useApproveRejectProfileMutation } from "../../store/services/dashboardApi";
+import { toast, ToastContainer } from 'react-toastify';
 
-const ProfileModal = ({ isOpen, onClose, professional }) => {
+const ProfileModal = ({ isOpen, onClose, professional_id }) => {
   const [selectedAction, setSelectedAction] = useState("approved");
+  const { data, isLoading } =
+    useGetPendingPhlebotomistDetailsQuery(professional_id);
+  const [approveRejectProfile] = useApproveRejectProfileMutation();
+
+  const handleApproveReject = async (action) => {
+    try {
+      await approveRejectProfile({ user_id: professional_id, action }).unwrap();
+      toast.success(`Profile ${action === "approve" ? "approved" : "rejected"} successfully!`);
+      onClose();
+    } catch (error) {
+      toast.error(`Failed to ${action === "approve" ? "approve" : "reject"} profile. Please try again.`);
+    }
+  };
 
   if (!isOpen) return null;
+
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg p-6">Loading...</div>
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -28,13 +50,13 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
             </div>
             <div className="flex p-4 pt-0 items-start gap-4 mb-6">
               <img
-                src={Avatar}
-                alt="FA Kabita"
+                src={data?.image || Avatar}
+                alt={data?.full_name }
                 className="w-16 h-16 m-3 rounded-full object-cover"
               />
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  FA Kabita
+                  {data?.full_name }
                 </h2>
 
                 {/* Contact Information */}
@@ -44,7 +66,9 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
                     <span className="text-gray-900">Registration Date</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-900">example@gmail.com</span>
+                    <span className="text-gray-900">
+                      {data?.email}
+                    </span>
                     <span className="text-gray-900">August 01, 2025</span>
                   </div>
 
@@ -53,7 +77,9 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
                     <span className="text-gray-600">User Type</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-900">(123) 456-7890</span>
+                    <span className="text-gray-900">
+                      {data?.phone }
+                    </span>
                     <span className="text-gray-900">Phlebotomist</span>
                   </div>
 
@@ -63,9 +89,11 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-900">
-                      1234 ABCD, Dhaka-124, Bangladesh
+                      {data?.service_area }
                     </span>
-                    <span className="text-gray-900">3.8 Years</span>
+                    <span className="text-gray-900">
+                      {data?.years_of_experience } Years
+                    </span>
                   </div>
                 </div>
               </div>
@@ -100,7 +128,7 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
                 <button className="flex items-center gap-1 px-3 py-1 bg-[#C9A14A] text-white text-xs rounded ">
                   <FaEye className="text-white" /> View
                 </button>
-                <div className="w-36">
+                <div className="w-36 hidden">
                   <SelectionDropdown
                     options={["approved", "deny"]}
                     selected={
@@ -139,7 +167,7 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
                 <button className="flex items-center gap-1 px-3 py-1 bg-[#C9A14A] text-white text-xs rounded ">
                   <FaEye className="text-white" /> View
                 </button>
-                <div className="w-36">
+                <div className="w-36 hidden">
                   <SelectionDropdown
                     options={["approved", "deny"]}
                     selected={
@@ -163,16 +191,23 @@ const ProfileModal = ({ isOpen, onClose, professional }) => {
               Final Decision
             </h3>
             <div className="flex gap-3">
-              <button className=" bg-[#C9A14A] text-white py-2 px-4 rounded-lg  font-medium">
+              <button
+                onClick={() => handleApproveReject("approve")}
+                className=" bg-[#C9A14A] text-white py-2 px-4 rounded-lg  font-medium"
+              >
                 ✓ Approve Profile
               </button>
-              <button className="border border-red-500 text-red-500 py-2 px-4 rounded-lg  font-medium">
+              <button
+                onClick={() => handleApproveReject("reject")}
+                className="border border-red-500 text-red-500 py-2 px-4 rounded-lg  font-medium"
+              >
                 ✗ Deny Profile
               </button>
             </div>
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };

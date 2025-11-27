@@ -2,8 +2,9 @@ import React from "react";
 import AvatarImage from "../../assets/images/Image-52.png";
 import ProfileModal from "./ProfileModal";
 
-const ProfessionalList = ({ isOpen, onClose, data: professionals,count }) => {
+const ProfessionalList = ({ isOpen, onClose, data: professionals, count }) => {
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
+  const [selectedProfile, setSelectedProfile] = React.useState(null);
 
   if (!isOpen) return null;
   return (
@@ -36,7 +37,9 @@ const ProfessionalList = ({ isOpen, onClose, data: professionals,count }) => {
           <button className="text-gray-600 text-sm font-medium">
             View All
           </button>
-          <span className="text-gray-600 text-sm font-medium">{count} Total</span>
+          <span className="text-gray-600 text-sm font-medium">
+            {count} Total
+          </span>
         </div>
 
         {/* Professional List */}
@@ -44,7 +47,10 @@ const ProfessionalList = ({ isOpen, onClose, data: professionals,count }) => {
           {professionals.map((professional) => (
             <div
               key={professional.id}
-              onClick={() => setIsProfileOpen(true)}
+              onClick={() => {
+                setIsProfileOpen(true);
+                setSelectedProfile(professional.id);
+              }}
               className="p-4 m-[10px]  border-[1px] border-[#E5E7EB] rounded-[10px]"
             >
               <div className="flex items-center justify-between  transition-colors cursor-pointer">
@@ -121,7 +127,9 @@ const ProfessionalList = ({ isOpen, onClose, data: professionals,count }) => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span>{professional.years_of_experience + " years experience"}</span>
+                    <span>
+                      {professional.years_of_experience + " years experience"}
+                    </span>
                   </div>
                 )}
               </div>
@@ -134,7 +142,7 @@ const ProfessionalList = ({ isOpen, onClose, data: professionals,count }) => {
         <ProfileModal
           isOpen={isProfileOpen}
           onClose={() => setIsProfileOpen(false)}
-          professional={null} // Pass the selected professional data here
+          professional_id={selectedProfile} // Pass the selected professional data here
         />
       )}
     </div>

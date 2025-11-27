@@ -22,9 +22,27 @@ export const dashboardApi = createApi({
     getPendingPhlebotomists: builder.query({
       query: () => "/dashboard/phlebotomists/pending/list/",
     }),
+    getPendingBusinessOwners: builder.query({
+      query: () => "/dashboard/business-owners/pending/list/",
+    }),
+    getPendingPhlebotomistDetails: builder.query({
+      query: (id) => `/dashboard/phlebotomists/pending/${id}/profile/view/`,
+    }),
+    approveRejectProfile: builder.mutation({
+      query: (body) => ({
+        url: "/dashboard/business-owners/profile/approve-reject/",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
 // Export hooks for usage in functional components
-export const { useGetDashboardDataQuery, useGetPendingPhlebotomistsQuery } =
-  dashboardApi;
+export const {
+  useGetDashboardDataQuery,
+  useGetPendingPhlebotomistsQuery,
+  useGetPendingBusinessOwnersQuery,
+  useGetPendingPhlebotomistDetailsQuery,
+  useApproveRejectProfileMutation,
+} = dashboardApi;

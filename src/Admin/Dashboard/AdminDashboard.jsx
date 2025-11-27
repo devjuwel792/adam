@@ -24,7 +24,11 @@ import MessagingInterface from "../Communication/MessagingInterface";
 import PayrollManagement from "../PayrollManagement/PayrollManagement";
 import Setting from "../Setting/Setting";
 import AnalyticsDashboard from "../AnalyticsDashboard/AnalyticsDashboard";
-import { useGetDashboardDataQuery, useGetPendingPhlebotomistsQuery } from "@/store/services/dashboardApi";
+import {
+  useGetDashboardDataQuery,
+  useGetPendingPhlebotomistsQuery,
+  useGetPendingBusinessOwnersQuery,
+} from "@/store/services/dashboardApi";
 
 export default function AdminDashboard() {
   const [currentComponent, setCurrentComponent] = useState("Dashboard"); // New state to track the active component
@@ -36,7 +40,12 @@ export default function AdminDashboard() {
   // Fetch dashboard data
   const { data: dashboardData, isLoading, error } = useGetDashboardDataQuery();
   const { data: pendingPhlebotomistsData } = useGetPendingPhlebotomistsQuery();
-  console.log("🚀 ~ AdminDashboard ~ pendingPhlebotomistsData:", pendingPhlebotomistsData)
+  const { data: pendingBusinessOwnersData } =
+    useGetPendingBusinessOwnersQuery();
+  console.log(
+    "🚀 ~ AdminDashboard ~ pendingBusinessOwnersData:",
+    pendingBusinessOwnersData
+  );
 
   const handleComponentChange = (component) => {
     setCurrentComponent(component);
@@ -58,7 +67,6 @@ export default function AdminDashboard() {
           currentComponent={currentComponent}
           onMenuClick={handleComponentChange}
         />
-        
       </div>
 
       {/* Main Content */}
@@ -138,25 +146,45 @@ export default function AdminDashboard() {
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                       <StatCard
                         title="Total Users"
-                        value={isLoading ? "..." : (dashboardData?.total_users || 0).toLocaleString()}
+                        value={
+                          isLoading
+                            ? "..."
+                            : (dashboardData?.total_users || 0).toLocaleString()
+                        }
                         icon={FaUsers}
                         color="teal"
                       />
                       <StatCard
                         title="Pending Verifications"
-                        value={isLoading ? "..." : (dashboardData?.pending_verification || 0).toString()}
+                        value={
+                          isLoading
+                            ? "..."
+                            : (
+                                dashboardData?.pending_verification || 0
+                              ).toString()
+                        }
                         icon={FaClock}
                         color="orange"
                       />
                       <StatCard
                         title="Approved Jobs"
-                        value={isLoading ? "..." : (dashboardData?.total_approved_jobs || 0).toString()}
+                        value={
+                          isLoading
+                            ? "..."
+                            : (
+                                dashboardData?.total_approved_jobs || 0
+                              ).toString()
+                        }
                         icon={FaBriefcase}
                         color="blue"
                       />
                       <StatCard
                         title="Revenue This Month"
-                        value={isLoading ? "..." : `$${dashboardData?.revenue_this_month || 0}`}
+                        value={
+                          isLoading
+                            ? "..."
+                            : `$${dashboardData?.revenue_this_month || 0}`
+                        }
                         icon={FaDollarSign}
                         color="green"
                       />
@@ -167,7 +195,7 @@ export default function AdminDashboard() {
                         title="Pending Registrations"
                         description="Review and approve new user registrations waiting for verification"
                         count={pendingPhlebotomistsData?.total_pending || 0}
-                        data ={pendingPhlebotomistsData?.phlebotomists || []}
+                        data={pendingPhlebotomistsData?.phlebotomists || []}
                         buttonText="Review Now"
                         color="orange"
                         isOpen={() => setIsOpenProfessionalList(true)}
@@ -178,12 +206,18 @@ export default function AdminDashboard() {
                         <ActionCard
                           title="Documents to Verify"
                           description="Verify professional credentials and certifications submitted by users"
-                          count={8}
                           buttonText="Verify Now"
                           color="blue"
                           isOpen={() => setIsOpenDocumentVerifyModal(true)}
                           isOpenDocumentVerifyModal={isOpenDocumentVerifyModal}
                           onClose={() => setIsOpenDocumentVerifyModal(false)}
+                          count={
+                            pendingBusinessOwnersData?.total_pending_business_owners ||
+                            0
+                          }
+                          data={
+                            pendingBusinessOwnersData?.business_owners || []
+                          }
                         />
                       </div>
                     </div>

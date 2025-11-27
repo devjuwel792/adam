@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa6";
 import SelectionDropdown from "./SelectionDropdown";
 
-const DocumentManager = ({ isOpen, onClose }) => {
+const DocumentManager = ({ isOpen, onClose,data,count }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [documentType, setDocumentType] = useState("All Document Types");
   const [dateFilter, setDateFilter] = useState("All Dates");
@@ -18,66 +18,90 @@ const DocumentManager = ({ isOpen, onClose }) => {
   const [selectedStatus, setSelectedStatus] = useState("pending");
 
   // Sample document data
-  const documents = [
-    {
-      id: 1,
-      type: "Medical Certificate",
-      professional: "FA Kabita",
-      role: "Phlebotomist",
-      uploadDate: "Aug 15, 2025",
-      timeAgo: "3 days ago",
-      status: "pending",
-    },
-    {
-      id: 2,
-      type: "Medical Certificate",
-      professional: "FA Kabita",
-      role: "XYZ Business",
-      uploadDate: "Aug 15, 2025",
-      timeAgo: "3 days ago",
-      status: "pending",
-    },
-    {
-      id: 3,
-      type: "Medical Certificate",
-      professional: "FA Kabita",
-      role: "XYZ Business",
-      uploadDate: "Aug 15, 2025",
-      timeAgo: "3 days ago",
-      status: "pending",
-    },
-    {
-      id: 4,
-      type: "Medical Certificate",
-      professional: "FA Kabita",
-      role: "Phlebotomist",
-      uploadDate: "Aug 15, 2025",
-      timeAgo: "3 days ago",
-      status: "pending",
-    },
-    {
-      id: 5,
-      type: "Medical Certificate",
-      professional: "FA Kabita",
-      role: "Phlebotomist",
-      uploadDate: "Aug 15, 2025",
-      timeAgo: "3 days ago",
-      status: "pending",
-    },
-    {
-      id: 6,
-      type: "Medical Certificate",
-      professional: "FA Kabita",
-      role: "XYZ Business",
-      uploadDate: "Aug 15, 2025",
-      timeAgo: "3 days ago",
-      status: "pending",
-    },
-  ];
+  // const documents = [
+  //   {
+  //     id: 1,
+  //     type: "Medical Certificate",
+  //     professional: "FA Kabita",
+  //     role: "Phlebotomist",
+  //     uploadDate: "Aug 15, 2025",
+  //     timeAgo: "3 days ago",
+  //     status: "pending",
+  //   },
+  //   {
+  //     id: 2,
+  //     type: "Medical Certificate",
+  //     professional: "FA Kabita",
+  //     role: "XYZ Business",
+  //     uploadDate: "Aug 15, 2025",
+  //     timeAgo: "3 days ago",
+  //     status: "pending",
+  //   },
+  //   {
+  //     id: 3,
+  //     type: "Medical Certificate",
+  //     professional: "FA Kabita",
+  //     role: "XYZ Business",
+  //     uploadDate: "Aug 15, 2025",
+  //     timeAgo: "3 days ago",
+  //     status: "pending",
+  //   },
+  //   {
+  //     id: 4,
+  //     type: "Medical Certificate",
+  //     professional: "FA Kabita",
+  //     role: "Phlebotomist",
+  //     uploadDate: "Aug 15, 2025",
+  //     timeAgo: "3 days ago",
+  //     status: "pending",
+  //   },
+  //   {
+  //     id: 5,
+  //     type: "Medical Certificate",
+  //     professional: "FA Kabita",
+  //     role: "Phlebotomist",
+  //     uploadDate: "Aug 15, 2025",
+  //     timeAgo: "3 days ago",
+  //     status: "pending",
+  //   },
+  //   {
+  //     id: 6,
+  //     type: "Medical Certificate",
+  //     professional: "FA Kabita",
+  //     role: "XYZ Business",
+  //     uploadDate: "Aug 15, 2025",
+  //     timeAgo: "3 days ago",
+  //     status: "pending",
+  //   },
+  // ];
 
-  const totalDocuments = 23;
+  const totalDocuments = data.length || 0;
   const documentsPerPage = 6;
   const totalPages = Math.ceil(totalDocuments / documentsPerPage);
+
+  // Calculate pagination
+  const startIndex = (currentPage - 1) * documentsPerPage;
+  const endIndex = startIndex + documentsPerPage;
+  const paginatedData = data.slice(startIndex, endIndex);
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 4;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  const pageNumbers = getPageNumbers();
 
   const handleAction = (docId, action) => {
     console.log(`Document ${docId} -> ${action}`);
@@ -167,7 +191,7 @@ const DocumentManager = ({ isOpen, onClose }) => {
         {/* Document Grid */}
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {documents.map((doc) => (
+            {paginatedData.map((doc) => (
               <div key={doc.id} className="bg-[#f1f1f1] rounded-lg p-4">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-16 h-16 bg-purple-100 rounded-md flex items-center justify-center">
@@ -221,7 +245,7 @@ const DocumentManager = ({ isOpen, onClose }) => {
         <div className="p-6 border-t">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              Showing 1-{documentsPerPage} of {totalDocuments} documents
+              Showing {(currentPage - 1) * documentsPerPage + 1}-{Math.min(currentPage * documentsPerPage, totalDocuments)} of {totalDocuments} documents
             </p>
             <div className="flex items-center gap-2">
               <button
@@ -244,7 +268,7 @@ const DocumentManager = ({ isOpen, onClose }) => {
                 </svg>
               </button>
 
-              {[1, 2, 3, 4].map((page) => (
+              {pageNumbers.map((page) => (
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}

@@ -65,6 +65,9 @@ export function ActionCard({
       <DocumentManager
         isOpen={isOpenDocumentVerifyModal}
         onClose={() => onClose()}
+        data={data}
+        count={count}
+        
       />
       <ProfessionalList
         isOpen={isOpenProfileList}

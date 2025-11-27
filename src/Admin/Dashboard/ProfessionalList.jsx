@@ -2,54 +2,13 @@ import React from "react";
 import AvatarImage from "../../assets/images/Image-52.png";
 import ProfileModal from "./ProfileModal";
 
-const ProfessionalList = ({ isOpen, onClose }) => {
+const ProfessionalList = ({ isOpen, onClose, data: professionals,count }) => {
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
-  const professionals = [
-    {
-      id: 1,
-      name: "FA Kabita",
-      distance: "2.3 miles away",
-      certification: "Certified Phlebotomist • 5 years exp",
-      available: true,
-      avatar: AvatarImage,
-    },
-    {
-      id: 2,
-      name: "FA Kabita",
-      distance: "2.3 miles away",
-      certification: "Certified XYZ Business",
-      available: true,
-      avatar: AvatarImage,
-    },
-    {
-      id: 3,
-      name: "FA Kabita",
-      distance: "2.3 miles away",
-      certification: "Certified Phlebotomist • 5 years exp",
-      available: true,
-      avatar: AvatarImage,
-    },
-    {
-      id: 4,
-      name: "FA Kabita",
-      distance: "2.3 miles away",
-      certification: "Certified Phlebotomist • 5 years exp",
-      available: true,
-      avatar: AvatarImage,
-    },
-    {
-      id: 5,
-      name: "FA Kabita",
-      distance: "2.3 miles away",
-      certification: "Certified Phlebotomist • 5 years exp",
-      available: true,
-      avatar: AvatarImage,
-    },
-  ];
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className=" max-w-md mx-auto bg-white pb-2 shadow-lg ">
+      <div className=" max-w-md max-h-[70vh] overflow-auto mx-auto bg-white pb-2 shadow-lg ">
         <div className="sticky top-0 ">
           <div className="absolute top-4 right-4">
             <button
@@ -77,7 +36,7 @@ const ProfessionalList = ({ isOpen, onClose }) => {
           <button className="text-gray-600 text-sm font-medium">
             View All
           </button>
-          <span className="text-gray-600 text-sm font-medium">150 Total</span>
+          <span className="text-gray-600 text-sm font-medium">{count} Total</span>
         </div>
 
         {/* Professional List */}
@@ -85,6 +44,7 @@ const ProfessionalList = ({ isOpen, onClose }) => {
           {professionals.map((professional) => (
             <div
               key={professional.id}
+              onClick={() => setIsProfileOpen(true)}
               className="p-4 m-[10px]  border-[1px] border-[#E5E7EB] rounded-[10px]"
             >
               <div className="flex items-center justify-between  transition-colors cursor-pointer">
@@ -92,8 +52,8 @@ const ProfessionalList = ({ isOpen, onClose }) => {
                   {/* Avatar */}
                   <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                     <img
-                      src={professional.avatar || AvatarImage}
-                      alt={professional.name}
+                      src={professional.image || AvatarImage}
+                      alt={professional.full_name}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -102,11 +62,11 @@ const ProfessionalList = ({ isOpen, onClose }) => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2 align-middle mb-1">
                       <h3 className="text-gray-900 font-semibold text-base">
-                        {professional.name}
+                        {professional.full_name}
                       </h3>
-                      {professional.available && (
+                      {professional.status && (
                         <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-                          Available
+                          {professional.status}
                         </span>
                       )}
                     </div>
@@ -130,37 +90,40 @@ const ProfessionalList = ({ isOpen, onClose }) => {
                   </svg>
                 </div>
               </div>
+              <div className="space-x-4 mt-3 flex">
+                {professional.location && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <svg
+                      className="w-4 h-4 text-teal-500 mr-1 flex-shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>{professional.location}</span>
+                  </div>
+                )}
 
-              <div className="space-y-1 flex">
-                <div className="flex items-center text-sm text-gray-600">
-                  <svg
-                    className="w-4 h-4 text-teal-500 mr-1 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{professional.distance}</span>
-                </div>
-
-                <div className="flex items-center text-sm text-gray-600">
-                  <svg
-                    className="w-4 h-4 text-teal-500 mr-1 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{professional.certification}</span>
-                </div>
+                {professional.years_of_experience && (
+                  <div className="flex items-center text-sm text-gray-600">
+                    <svg
+                      className="w-4 h-4 text-teal-500 mr-1 flex-shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>{professional.years_of_experience + " years experience"}</span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

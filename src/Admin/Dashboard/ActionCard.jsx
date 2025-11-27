@@ -23,6 +23,7 @@ export function ActionCard({
   count,
   buttonText,
   color = "orange",
+  data,
 }) {
   const Icon = color === "orange" ? FaUserPlus : GoQuestion;
 
@@ -65,7 +66,12 @@ export function ActionCard({
         isOpen={isOpenDocumentVerifyModal}
         onClose={() => onClose()}
       />
-      <ProfessionalList isOpen={isOpenProfileList} onClose={() => onClose()} />
+      <ProfessionalList
+        isOpen={isOpenProfileList}
+        data={data}
+        count={count}
+        onClose={() => onClose()}
+      />
     </Card>
   );
 }

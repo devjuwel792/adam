@@ -15,14 +15,14 @@ const UserManagement = () => {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
 
   const { data: usersData, isLoading, error } = useGetUsersListQuery();
-  console.log("🚀 ~ UserManagement ~ usersData:", usersData)
-  console.log("🚀 ~ UserManagement ~ isLoading:", isLoading)
+ 
+
 
   const [userList, setUserList] = useState([]);
 
   useEffect(() => {
-    if (usersData) {
-      const mappedUsers = usersData.map((user) => ({
+    if (usersData?.users) {
+      const mappedUsers = usersData?.users.map((user) => ({
         id: user.id,
         name: user.full_name,
         role: user.role,
@@ -36,7 +36,7 @@ const UserManagement = () => {
       }));
       setUserList(mappedUsers);
     }
-  }, [usersData]);
+  }, [usersData?.users]);
 
   const handleStatusChange = (userId, newStatus) => {
     setUserList((prevUsers) =>
@@ -48,7 +48,7 @@ const UserManagement = () => {
 
   const getStatusBadgeColor = (status) => {
     switch (status) {
-      case "Active":
+      case "approved":
         return "bg-green-100 text-green-800";
       case "pending":
         return "bg-yellow-100 text-yellow-800";
@@ -61,9 +61,9 @@ const UserManagement = () => {
 
   const getRoleBadgeColor = (role) => {
     switch (role) {
-      case "Phlebotomist":
+      case "phlebotomist":
         return "bg-blue-100 text-blue-800";
-      case "Client":
+      case "business_owner":
         return "bg-purple-100 text-purple-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -145,8 +145,9 @@ const UserManagement = () => {
                 className="px-3 py-2 border border-gray-300 rounded-md "
               >
                 <option>All Roles</option>
-                <option>Phlebotomist</option>
-                <option>Client</option>
+                <option value={"phlebotomist"}>Phlebotomist</option>
+                <option >Client</option>
+                <option value={"business_owner"}>Business Owner</option>
               </select>
             </div>
 

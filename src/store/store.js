@@ -9,6 +9,7 @@ export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     [dashboardApi.reducerPath]: dashboardApi.reducer,
+    [userManagementApi.reducerPath]: userManagementApi.reducer,
     auth: authReducer,
     // add other reducers here
   },

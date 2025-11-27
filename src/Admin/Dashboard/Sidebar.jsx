@@ -8,6 +8,7 @@ import {
   ChartBar,
   Banknote,
   House,
+  LogOut,
 } from "lucide-react";
 
 export const Sidebar = ({ currentComponent, onMenuClick }) => {
@@ -21,6 +22,7 @@ export const Sidebar = ({ currentComponent, onMenuClick }) => {
     { icon: ChartBar, label: "Analytics & Reporting" },
     { icon: Banknote, label: "Payroll Management" },
     { icon: Banknote, label: "Setting" },
+    { icon: LogOut, label: "Logout" },
   ];
 
   const params = useLocation();

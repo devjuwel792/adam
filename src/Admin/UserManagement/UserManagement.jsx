@@ -15,8 +15,6 @@ const UserManagement = () => {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
 
   const { data: usersData, isLoading, error } = useGetUsersListQuery();
- 
-
 
   const [userList, setUserList] = useState([]);
 
@@ -146,7 +144,7 @@ const UserManagement = () => {
               >
                 <option>All Roles</option>
                 <option value={"phlebotomist"}>Phlebotomist</option>
-                <option >Client</option>
+                <option>Client</option>
                 <option value={"business_owner"}>Business Owner</option>
               </select>
             </div>
@@ -186,64 +184,63 @@ const UserManagement = () => {
       <div className=" space-y-3 my-6">
         {filteredUsers.map((user) => (
           <div
-            key={user.id}
-            className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                {/* Avatar */}
-                <img
-                  src={user.avatar || "/placeholder.svg"}
-                  alt={user.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                key={user.id}>
+            {user.role === "phlebotomist" && (
+              <div
+                className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    {/* Avatar */}
+                    <img
+                      src={user.avatar || "/placeholder.svg"}
+                      alt={user.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
 
-                {/* User Info */}
-                <div className="flex-1">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {user.name}
-                  </h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(
-                        user.role
-                      )}`}
+                    {/* User Info */}
+                    <div className="flex-1">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {user.name}
+                      </h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(
+                            user.role
+                          )}`}
+                        >
+                          {user.role}
+                        </span>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
+                            user.status
+                          )}`}
+                        >
+                          {user.status}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          Joined: {user.joinDate}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsProfileOpen(true)}
+                      // onClick={() => handleStatusChange(user.id, "Approved")}
+                      className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
                     >
-                      {user.role}
-                    </span>
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
-                        user.status
-                      )}`}
-                    >
-                      {user.status}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      Joined: {user.joinDate}
-                    </span>
+                      <FaEye /> View
+                    </button>
+                    {getActionButton(user)}
                   </div>
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setIsProfileOpen(true)}
-                  // onClick={() => handleStatusChange(user.id, "Approved")}
-                  className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
-                >
-                  <FaEye /> View
-                </button>
-                {getActionButton(user)}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      {/* <div className=" space-y-3 mt-6 pb-[100px]">
-        {filteredUsers.map((user) => (
-          <div
-            key={user.id}
+            )}
+            {user.role !== "phlebotomist" && <div
+       
             className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors"
           >
             <div className="flex items-center justify-between">
@@ -270,9 +267,15 @@ const UserManagement = () => {
                 </button>
               </div>
             </div>
+          </div>}
           </div>
         ))}
-      </div> */}
+      </div>
+      <div className=" space-y-3 mt-6 pb-[100px]">
+        {filteredUsers.map((user) => (
+          <></>
+        ))}
+      </div> 
 
       {/* Empty State */}
       {filteredUsers.length === 0 && !isLoading && (

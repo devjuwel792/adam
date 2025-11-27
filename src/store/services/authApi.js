@@ -8,7 +8,6 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers, { getState }) => {
-    
       if (getState().auth.token) {
         headers.set("authorization", `Bearer ${token}`);
       }
@@ -16,9 +15,6 @@ export const api = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getUsers: builder.query({
-      query: () => "/users",
-    }),
     login: builder.mutation({
       query: (credentials) => ({
         url: "/accounts/login/",

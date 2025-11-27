@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../store/authSlice";
 import { Sidebar } from "./Sidebar";
 import UserManagement from "../UserManagement/UserManagement";
 import Header from "./Header";
@@ -32,6 +35,8 @@ import {
 import { ToastContainer } from "react-toastify";
 
 export default function AdminDashboard() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [currentComponent, setCurrentComponent] = useState("Dashboard"); // New state to track the active component
   const [isOpenDocumentVerifyModal, setIsOpenDocumentVerifyModal] =
     useState(false);
@@ -49,7 +54,12 @@ export default function AdminDashboard() {
   );
 
   const handleComponentChange = (component) => {
-    setCurrentComponent(component);
+    if (component === "Logout") {
+      dispatch(logout());
+      navigate("/admin/login");
+    } else {
+      setCurrentComponent(component);
+    }
   };
 
   useEffect(() => {

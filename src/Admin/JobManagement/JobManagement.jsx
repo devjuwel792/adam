@@ -4,59 +4,27 @@ import DatePicker from "../DataPicker";
 import { FaAngleDown, FaBuilding } from "react-icons/fa6";
 import JobDetailsModal from "./JobDetailsModal";
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
+import { useGetJobsListQuery } from "../../store/services/jobManagementApi";
 
 const JobManagement = ({ onMessage }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [dateFilter, setDateFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [visibleJobsCount, setVisibleJobsCount] = useState(10);
 
-  const jobs = [
-    {
-      id: 1,
-      title: "Blood Draw Station",
-      jobId: "#JOB-2025-001",
-      company: "Community Health Center",
-      location: "XYZ",
-      payRate: "$180-120/hr",
-      postedTime: "Posted 2 hours ago",
-      status: "Published",
-      statusColor: "bg-orange-500",
-    },
-    {
-      id: 2,
-      title: "Blood Draw Station",
-      jobId: "#JOB-2025-001",
-      company: "Community Health Center",
-      location: "XYZ",
-      payRate: "$180-120/hr",
-      postedTime: "Posted 2 hours ago",
-      status: "Approved",
-      statusColor: "bg-green-500",
-    },
-    {
-      id: 3,
-      title: "Blood Draw Station",
-      jobId: "#JOB-2025-001",
-      company: "Community Health Center",
-      location: "XYZ",
-      payRate: "$180-120/hr",
-      postedTime: "Posted 2 hours ago",
-      status: "Approved",
-      statusColor: "bg-green-500",
-    },
-    {
-      id: 4,
-      title: "Blood Draw Station",
-      jobId: "#JOB-2025-001",
-      company: "Community Health Center",
-      location: "XYZ",
-      payRate: "$180-120/hr",
-      postedTime: "Posted 2 hours ago",
-      status: "Approved",
-      statusColor: "bg-green-500",
-    },
-  ];
+  const { data, error, isLoading } = useGetJobsListQuery();
+
+  const jobs = data?.jobs?.map((job) => ({
+    id: job.id,
+    title: job.title,
+    jobId: `#JOB-${job.id}`,
+    company: job.created_by,
+    location: job.location,
+    payRate: `$${job.pay_rate}/${job.pay_type}`,
+    postedTime: `Posted ${job.posted_hours_ago} hours ago`,
+    status: job.active_status,
+  })) || [];
 
   // state for selected job status
   const [selectedJobStatus, setSelectedJobStatus] = useState({}); // { jobId: "Published" }
@@ -88,6 +56,12 @@ const JobManagement = ({ onMessage }) => {
       statusFilter === "All Status" || job.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
+
+  const visibleJobs = filteredJobs.slice(0, visibleJobsCount);
+
+  const handleLoadMore = () => {
+    setVisibleJobsCount((prev) => prev + 10);
+  };
 
   return (
     <div style={{ fontFamily: "Montserrat" }} className=" ">
@@ -163,53 +137,71 @@ const JobManagement = ({ onMessage }) => {
       {/* Job Listings */}
       <div className="max-w-3xl bg-gray-50 w-full rounded-md my-7">
         <div className="p-6">
-          <div className="space-y-4">
-            {filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-white rounded-lg p-4  transition-colors "
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {job.title}
-                      </h3>
-                    </div>
+          {isLoading ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">Loading jobs...</p>
+            </div>
+          ) : (
+            <>
+              <div className="space-y-4">
+                {visibleJobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="bg-white rounded-lg p-4  transition-colors "
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3 mb-2">
+                          <h3 className="text-lg font-medium text-gray-900">
+                            {job.title}
+                          </h3>
+                        </div>
 
-                    <div className="flex items-center space-x-4 text-sm  mb-2">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-sm ">Job ID : {job.jobId}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <FaBuilding />
-                        <span>{job.company}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="w-4 h-4" />
-                        <span>{job.location}</span>
-                      </div>
-                      <span className="font-medium text-gray-900">
-                        {job.payRate}
-                      </span>
-                    </div>
+                        <div className="flex items-center space-x-4 text-sm  mb-2">
+                          <div className="flex items-center space-x-1">
+                            <span className="text-sm ">Job ID : {job.jobId}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <FaBuilding />
+                            <span>{job.company}</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <MapPin className="w-4 h-4" />
+                            <span>{job.location}</span>
+                          </div>
+                          <span className="font-medium text-gray-900">
+                            {job.payRate}
+                          </span>
+                        </div>
 
-                    <div className="flex items-center space-x-3">
-                      {getStatusDropdown(job)}
-                      <span className="text-sm text-gray-500">
-                        {job.postedTime}
-                      </span>
+                        <div className="flex items-center space-x-3">
+                          {getStatusDropdown(job)}
+                          <span className="text-sm text-gray-500">
+                            {job.postedTime}
+                          </span>
+                        </div>
+                      </div>
+
+                      <ChevronRight
+                        onClick={() => setIsModalOpen(true)}
+                        className="w-5 h-5 cursor-pointer self-start text-gray-400"
+                      />
                     </div>
                   </div>
-
-                  <ChevronRight
-                    onClick={() => setIsModalOpen(true)}
-                    className="w-5 h-5 cursor-pointer self-start text-gray-400"
-                  />
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+              {visibleJobsCount < filteredJobs.length && (
+                <div className="text-center mt-6">
+                  <button
+                    onClick={handleLoadMore}
+                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  >
+                    Load More
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
       <JobDetailsModal

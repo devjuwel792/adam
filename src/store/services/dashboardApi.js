@@ -21,19 +21,30 @@ export const dashboardApi = createApi({
     }),
     getPendingPhlebotomists: builder.query({
       query: () => "/dashboard/phlebotomists/pending/list/",
+      providesTags: ["PhlebotomistsPending"],
     }),
     getPendingBusinessOwners: builder.query({
       query: () => "/dashboard/business-owners/pending/list/",
+      providesTags: ["PendingBusinessOwners"],
     }),
     getPendingPhlebotomistDetails: builder.query({
       query: (id) => `/dashboard/phlebotomists/pending/${id}/profile/view/`,
     }),
-    approveRejectProfile: builder.mutation({
+    approveRejectBusinessProfile: builder.mutation({
       query: (body) => ({
         url: "/dashboard/business-owners/profile/approve-reject/",
         method: "POST",
         body,
       }),
+      invalidatesTags: ["PendingBusinessOwners"],
+    }),
+    approveRejectProfile: builder.mutation({
+      query: (body) => ({
+        url: "/dashboard/phlebotomists/profile/approve-reject/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["PhlebotomistsPending"],
     }),
   }),
 });
@@ -45,4 +56,5 @@ export const {
   useGetPendingBusinessOwnersQuery,
   useGetPendingPhlebotomistDetailsQuery,
   useApproveRejectProfileMutation,
+  useApproveRejectBusinessProfileMutation,
 } = dashboardApi;

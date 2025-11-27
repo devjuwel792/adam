@@ -207,7 +207,7 @@ const ProfileModal = ({ isOpen, onClose, professional_id }) => {
           </div>
         </div>
       </div>
-      <ToastContainer/>
+     
     </div>
   );
 };

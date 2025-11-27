@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   FaCertificate,
   FaAngleDown,
@@ -7,6 +7,9 @@ import {
   FaClock,
 } from "react-icons/fa6";
 import SelectionDropdown from "./SelectionDropdown";
+import { useApproveRejectBusinessProfileMutation } from "../../store/services/dashboardApi";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DocumentManager = ({ isOpen, onClose,data,count }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +19,8 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const [selectedAction, setSelectedAction] = useState({}); // { docId: action }
   const [selectedStatus, setSelectedStatus] = useState("pending");
+
+  const [approveRejectBusinessProfile] = useApproveRejectBusinessProfileMutation();
 
   // Sample document data
   // const documents = [
@@ -75,14 +80,58 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
   //   },
   // ];
 
-  const totalDocuments = data.length || 0;
+  // Filtered data based on search and filters
+  const filteredData = useMemo(() => {
+    let filtered = data || [];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter((business) =>
+        business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        business.user_full_name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Document type filter (using business_type)
+    if (documentType !== "All Document Types") {
+      filtered = filtered.filter((business) =>
+        business.business_type.toLowerCase() === documentType.toLowerCase()
+      );
+    }
+
+    // Date filter
+    if (dateFilter !== "All Dates") {
+      const now = new Date();
+      let daysLimit;
+      switch (dateFilter) {
+        case "Last 7 days":
+          daysLimit = 7;
+          break;
+        case "Last 30 days":
+          daysLimit = 30;
+          break;
+        case "Last 90 days":
+          daysLimit = 90;
+          break;
+        default:
+          daysLimit = null;
+      }
+      if (daysLimit) {
+        filtered = filtered.filter((business) => business.days_ago <= daysLimit);
+      }
+    }
+
+    return filtered;
+  }, [data, searchTerm, documentType, dateFilter]);
+
+  const totalDocuments = filteredData.length;
   const documentsPerPage = 6;
   const totalPages = Math.ceil(totalDocuments / documentsPerPage);
 
   // Calculate pagination
   const startIndex = (currentPage - 1) * documentsPerPage;
   const endIndex = startIndex + documentsPerPage;
-  const paginatedData = data.slice(startIndex, endIndex);
+  const paginatedData = filteredData.slice(startIndex, endIndex);
 
   // Generate page numbers to display
   const getPageNumbers = () => {
@@ -103,9 +152,34 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
 
   const pageNumbers = getPageNumbers();
 
-  const handleAction = (docId, action) => {
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, documentType, dateFilter]);
+
+  const handleAction = async (docId, action) => {
     console.log(`Document ${docId} -> ${action}`);
     setSelectedAction((prev) => ({ ...prev, [docId]: action }));
+
+    try {
+      const result = await approveRejectBusinessProfile({
+        user_id: docId.toString(),
+        action: action === "approved" ? "approve" : "reject",
+      });
+
+      if (result.data) {
+        console.log("Profile action successful:", result.data);
+        toast.success("Business Owner account status updated to approved.");
+        // Optionally, you can update the local state or refetch data here
+      } else if (result.error) {
+        console.error("Profile action failed:", result.error);
+        toast.error("Business Owner account status updated faild");
+      }
+    } catch (error) {
+      console.error("Error approving/rejecting profile:", error);
+      toast.error("Business Owner account status updated faild");
+    }
+
     setOpenDropdownId(null);
   };
 
@@ -158,7 +232,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
               <select
                 value={documentType}
                 onChange={(e) => setDocumentType(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 hidden border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option>All Document Types</option>
                 <option>Medical Certificate</option>
@@ -178,7 +252,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
               </select>
             </div>
 
-            <div className="w-32">
+            <div className="w-32 hidden">
               <SelectionDropdown
                 options={["pending", "active", "draft"]}
                 selected={selectedStatus}
@@ -191,18 +265,18 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
         {/* Document Grid */}
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {paginatedData.map((doc) => (
-              <div key={doc.id} className="bg-[#f1f1f1] rounded-lg p-4">
+            {paginatedData.map((business) => (
+              <div key={business.id} className="bg-[#f1f1f1] rounded-lg p-4">
                 <div className="flex items-start gap-3 mb-4">
                   <div className="w-16 h-16 bg-purple-100 rounded-md flex items-center justify-center">
                     <FaCertificate className="text-purple-500 text-[34px]" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 mb-1">
-                      {doc.type}
+                      {business.business_name}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {doc.professional}({doc.role})
+                      {business.user_full_name} ({business.business_type})
                     </p>
                   </div>
                 </div>
@@ -210,17 +284,17 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <FaCalendar />
-                    Uploaded: {doc.uploadDate}
+                    Created: {new Date(business.created).toLocaleDateString()}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <FaClock />
-                    {doc.timeAgo}
+                    {business.days_ago} days ago
                   </div>
                 </div>
 
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleViewDetails(doc.id)}
+                    onClick={() => handleViewDetails(business.id)}
                     className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-[#878787] text-white text-sm rounded-md  transition-colors"
                   >
                     <FaFilePdf />
@@ -231,8 +305,8 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
                   <div className="flex-1">
                     <SelectionDropdown
                       options={["approved", "deny"]}
-                      selected={selectedAction[doc.id]}
-                      onSelect={(action) => handleAction(doc.id, action)}
+                      selected={selectedAction[business.id]}
+                      onSelect={(action) => handleAction(business.id, action)}
                     />
                   </div>
                 </div>

@@ -29,6 +29,7 @@ import {
   useGetPendingPhlebotomistsQuery,
   useGetPendingBusinessOwnersQuery,
 } from "@/store/services/dashboardApi";
+import { ToastContainer } from "react-toastify";
 
 export default function AdminDashboard() {
   const [currentComponent, setCurrentComponent] = useState("Dashboard"); // New state to track the active component
@@ -276,6 +277,7 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

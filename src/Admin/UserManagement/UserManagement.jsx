@@ -1,60 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Avatar from "@/assets/images/Image-52.png";
 import { FaEye } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa6";
 import DetailedUserProfile from "./DetailedUserProfile";
 import AppointmentDetails from "./AppointmentDetails";
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
+import { useGetUsersListQuery } from "../../store/services/userManagementApi";
+
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("All Roles");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
-  const users = [
-    {
-      id: "SID-2025-001",
-      name: "FA Kabita",
-      role: "Phlebotomist",
-      status: "pending",
-      joinDate: "Jan 15, 2024",
-      avatar: Avatar,
-    },
-    {
-      id: "SID-2025-002",
-      name: "Fahmida Tasnim",
-      role: "Client",
-      status: "draft",
-      joinDate: "Jan 12, 2024",
-      avatar: Avatar,
-    },
-    {
-      id: "SID-2025-003",
-      name: "Md. Fahad Hossain",
-      role: "Phlebotomist",
-      status: "Active",
-      joinDate: "Jan 10, 2024",
-      avatar: Avatar,
-    },
-    {
-      id: "SID-2025-004",
-      name: "Md. Rashan Hossain",
-      role: "Client",
-      status: "draft",
-      joinDate: "Jan 08, 2024",
-      avatar: Avatar,
-    },
-    {
-      id: "SID-2025-005",
-      name: "Rohan Islam",
-      role: "Phlebotomist",
-      status: "Active",
-      joinDate: "Jan 05, 2024",
-      avatar: Avatar,
-    },
-  ];
 
-  const [userList, setUserList] = useState(users);
+  const { data: usersData, isLoading, error } = useGetUsersListQuery();
+  console.log("🚀 ~ UserManagement ~ usersData:", usersData)
+  console.log("🚀 ~ UserManagement ~ isLoading:", isLoading)
+
+  const [userList, setUserList] = useState([]);
+
+  useEffect(() => {
+    if (usersData) {
+      const mappedUsers = usersData.map((user) => ({
+        id: user.id,
+        name: user.full_name,
+        role: user.role,
+        status: user.account_status,
+        joinDate: new Date(user.date_joined).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+        avatar: user.image || Avatar,
+      }));
+      setUserList(mappedUsers);
+    }
+  }, [usersData]);
 
   const handleStatusChange = (userId, newStatus) => {
     setUserList((prevUsers) =>
@@ -185,6 +167,20 @@ const UserManagement = () => {
         </div>
       </div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div className="p-12 mt-9 text-center">
+          <p className="text-gray-500">Loading users...</p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="p-12 mt-9 text-center">
+          <p className="text-red-500">Error loading users: {error.message}</p>
+        </div>
+      )}
+
       {/* User List */}
       <div className=" space-y-3 my-6">
         {filteredUsers.map((user) => (
@@ -243,7 +239,7 @@ const UserManagement = () => {
           </div>
         ))}
       </div>
-      <div className=" space-y-3 mt-6 pb-[100px]">
+      {/* <div className=" space-y-3 mt-6 pb-[100px]">
         {filteredUsers.map((user) => (
           <div
             key={user.id}
@@ -251,7 +247,7 @@ const UserManagement = () => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                {/* User Info */}
+                
                 <div className="flex-1">
                   <h3 className="text-lg font-medium text-gray-900">
                     {user.name}
@@ -262,7 +258,7 @@ const UserManagement = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              
               <div className="flex items-center gap-2">
                 <button
                   // onClick={() => handleStatusChange(user.id, "Approved")}
@@ -275,10 +271,10 @@ const UserManagement = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Empty State */}
-      {filteredUsers.length === 0 && (
+      {filteredUsers.length === 0 && !isLoading && (
         <div className="p-12 mt-9 text-center">
           <div className="text-gray-400 mb-2">
             <svg

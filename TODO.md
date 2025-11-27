@@ -1,9 +1,9 @@
-- [ ] Import useGetPendingPhlebotomistDetailsQuery from '../../store/services/dashboardApi'
-- [ ] Add hook call: const { data, isLoading } = useGetPendingPhlebotomistDetailsQuery(professional_id);
-- [ ] Update profile image src to use data?.image || Avatar
-- [ ] Update name (h2) to data?.full_name || 'FA Kabita'
-- [ ] Update email to data?.email || 'example@gmail.com'
-- [ ] Update phone to data?.phone || '(123) 456-7890'
-- [ ] Update address to data?.service_area || '1234 ABCD, Dhaka-124, Bangladesh'
-- [ ] Update experience to `${data?.years_of_experience || 3.8} Years`
-- [ ] Add loading state: if (isLoading) return <div>Loading...</div>;
+# TODO for User Management API Integration
+
+- [ ] Create `src/store/services/userManagementApi.js` with RTK Query API slice including `getUsersList` endpoint for `/dashboard/users/list/`
+- [ ] Update `src/Admin/UserManagement/UserManagement.jsx` to import and use `useGetUsersListQuery` hook
+- [ ] Map API response fields to component structure (e.g., full_name to name, account_status to status)
+- [ ] Add loading state handling in UserManagement.jsx
+- [ ] Replace hardcoded users array with fetched data
+- [ ] Handle error states if necessary
+- [ ] Verify data displays correctly and matches sample output

@@ -11,6 +11,7 @@ const JobManagement = ({ onMessage }) => {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [dateFilter, setDateFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [visibleJobsCount, setVisibleJobsCount] = useState(10);
 
   const { data, error, isLoading } = useGetJobsListQuery();
@@ -183,7 +184,10 @@ const JobManagement = ({ onMessage }) => {
                       </div>
 
                       <ChevronRight
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                          setSelectedJob(job);
+                          setIsModalOpen(true);
+                        }}
                         className="w-5 h-5 cursor-pointer self-start text-gray-400"
                       />
                     </div>
@@ -206,8 +210,12 @@ const JobManagement = ({ onMessage }) => {
       </div>
       <JobDetailsModal
         isOpen={isModalOpen}
+        job={selectedJob}
         onMessage={() => onMessage()}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedJob(null);
+        }}
       />
     </div>
   );

@@ -19,8 +19,11 @@ export const jobManagementApi = createApi({
     getJobsList: builder.query({
       query: () => "/dashboard/jobs/list/",
     }),
+    getJobDetail: builder.query({
+      query: (id) => `/dashboard/jobs/${id}/detail/`,
+    }),
   }),
 });
 
 // Export hooks for usage in functional components
-export const { useGetJobsListQuery } = jobManagementApi;
+export const { useGetJobsListQuery, useGetJobDetailQuery } = jobManagementApi;

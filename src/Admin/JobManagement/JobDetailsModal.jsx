@@ -19,9 +19,14 @@ import {
   FaLocationDot,
 } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
+import { useGetJobDetailQuery } from "../../store/services/jobManagementApi";
 
 const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
   if (!isOpen) return null;
+
+  const { data: jobDetail, isLoading, error } = useGetJobDetailQuery(job?.id, {
+    skip: !job?.id,
+  });
 
   const handleApprove = () => {
     console.log("Job approved:", job?.jobId);
@@ -42,6 +47,26 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
     console.log("View client profile");
     // Handle view client profile logic here
   };
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white max-w-[70vw] w-full max-h-[90vh] overflow-y-auto flex items-center justify-center">
+          <p className="text-gray-600">Loading job details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white max-w-[70vw] w-full max-h-[90vh] overflow-y-auto flex items-center justify-center">
+          <p className="text-red-600">Error loading job details.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -76,22 +101,22 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
                 Blood Draw Station
               </h2>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                <span>Job ID: #JOB-2024-001</span>
-                <span>Posted: July 30, 2025</span>
+                <span>Job ID: #JOB-{jobDetail?.id}</span>
+                <span>Posted: {new Date(jobDetail?.created_on).toLocaleDateString()}</span>
               </div>
-              <div className="flex items-center justify-between space-x-4 ">
+                <div className="flex items-center justify-between space-x-4 ">
                 <div className="flex items-center  gap-1">
                   <FaBriefcase className="text-[#00A6A6]" />
-                  <span className=" py-1 text-sm ">Full-time Remote</span>
+                  <span className=" py-1 text-sm ">{jobDetail?.job_types} {jobDetail?.profession_type}</span>
                 </div>
                 <div className="flex items-center  gap-1">
                   <FaDollarSign className="text-[#00A6A6]" />
-                  <span className=" py-1 text-sm ">530/hr</span>
+                  <span className=" py-1 text-sm ">${jobDetail?.pay_rate}/{jobDetail?.pay_type}</span>
                 </div>
 
                 <div className="flex items-center gap-1">
                   <FaCalendar className="text-[#00A6A6]" />
-                  <span className=" py-1 text-sm ">Start: August 1, 2025</span>
+                  <span className=" py-1 text-sm ">Start: {new Date(jobDetail?.date).toLocaleDateString()}</span>
                 </div>
               </div>
             </div>

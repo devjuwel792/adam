@@ -13,6 +13,7 @@ const UserManagement = () => {
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const { data: usersData, isLoading, error } = useGetUsersListQuery();
 
@@ -183,12 +184,9 @@ const UserManagement = () => {
       {/* User List */}
       <div className=" space-y-3 my-6">
         {filteredUsers.map((user) => (
-          <div
-                key={user.id}>
+          <div key={user.id}>
             {user.role === "phlebotomist" && (
-              <div
-                className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors"
-              >
+              <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     {/* Avatar */}
@@ -228,7 +226,10 @@ const UserManagement = () => {
                   {/* Action Buttons */}
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => setIsProfileOpen(true)}
+                      onClick={() => {
+                        setSelectedUser(user);
+                        setIsProfileOpen(true);
+                      }}
                       // onClick={() => handleStatusChange(user.id, "Approved")}
                       className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
                     >
@@ -239,35 +240,34 @@ const UserManagement = () => {
                 </div>
               </div>
             )}
-            {user.role !== "phlebotomist" && <div
-       
-            className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                
-                <div className="flex-1">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {user.name}
-                  </h3>
-                  <div className="flex items-center gap-3 mt-1">
-                    <span className="text-sm text-gray-500">ID: {user.id}</span>
+            {user.role !== "phlebotomist" && (
+              <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {user.name}
+                      </h3>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-sm text-gray-500">
+                          ID: {user.id}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      // onClick={() => handleStatusChange(user.id, "Approved")}
+                      onClick={() => setIsAppointmentOpen(true)}
+                      className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
+                    >
+                      <FaEye /> View
+                    </button>
                   </div>
                 </div>
               </div>
-
-              
-              <div className="flex items-center gap-2">
-                <button
-                  // onClick={() => handleStatusChange(user.id, "Approved")}
-                  onClick={() => setIsAppointmentOpen(true)}
-                  className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
-                >
-                  <FaEye /> View
-                </button>
-              </div>
-            </div>
-          </div>}
+            )}
           </div>
         ))}
       </div>
@@ -275,7 +275,7 @@ const UserManagement = () => {
         {filteredUsers.map((user) => (
           <></>
         ))}
-      </div> 
+      </div>
 
       {/* Empty State */}
       {filteredUsers.length === 0 && !isLoading && (
@@ -301,7 +301,11 @@ const UserManagement = () => {
       {/* <DetailedUserProfile /> */}
       <DetailedUserProfile
         isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
+        onClose={() => {
+          setIsProfileOpen(false);
+          setSelectedUser(null);          
+        }}
+        user={selectedUser}
       />
       <AppointmentDetails
         isOpen={isAppointmentOpen}

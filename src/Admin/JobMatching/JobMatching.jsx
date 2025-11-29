@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaCalendar, FaClock, FaLocationDot } from "react-icons/fa6";
 import AvailablePhlebotomists from "./AvailablePhlebotomists";
+import { useGetJobMatchingListQuery } from "../../store/services/jobMatchingApi";
 
 const JobMatching = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,48 +10,18 @@ const JobMatching = () => {
 
   const [openPhlebotomistsModal, setOpenPhlebotomistsModal] = useState(false);
 
-  const jobs = [
-    {
-      id: 1,
-      title: "Routine Blood Draw",
-      company: "Metro General Hospital",
-      distance: "2.1 miles away",
-      timeSlot: "11:00 PM - 7:00 AM",
-      date: "Aug 9, 2025",
-      duration: "3 hours",
-      payRate: "$30/hr",
-    },
-    {
-      id: 2,
-      title: "Routine Blood Draw",
-      company: "Metro General Hospital",
-      distance: "2.3 miles away",
-      timeSlot: "11:00 PM - 7:00 AM",
-      date: "Aug 9, 2025",
-      duration: "3 hours",
-      payRate: "$30/hr",
-    },
-    {
-      id: 3,
-      title: "Routine Blood Draw",
-      company: "Metro General Hospital",
-      distance: "2.5 miles away",
-      timeSlot: "11:00 PM - 7:00 AM",
-      date: "Aug 8, 2025",
-      duration: "4 hours",
-      payRate: "$30/hr",
-    },
-    {
-      id: 4,
-      title: "Routine Blood Draw",
-      company: "Metro General Hospital",
-      distance: "2.1 miles away",
-      timeSlot: "11:00 PM - 7:00 AM",
-      date: "Aug 11, 2025",
-      duration: "3 hours",
-      payRate: "$30/hr",
-    },
-  ];
+  const { data, error, isLoading } = useGetJobMatchingListQuery();
+
+  const jobs = data?.jobs?.map((job) => ({
+    id: job.id,
+    title: job.title,
+    company: job.created_by,
+    distance: "2.1 miles away", // Placeholder, as not in API
+    timeSlot: `${job.start_time} - ${job.end_time}`,
+    date: new Date(job.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    duration: job.total_working_hour,
+    payRate: `$${job.pay_rate}/${job.pay_type}`,
+  })) || [];
 
   const filteredJobs = jobs.filter(
     (job) =>
@@ -117,9 +88,14 @@ const JobMatching = () => {
       </div>
 
       {/* Job Listings */}
-      <div className="border shadow-sm min-h-[70vh] rounded-md overflow-y-auto">
-        <div className="divide-y divide-gray-200">
-          {filteredJobs.map((job) => (
+      <div className="border shadow-sm  rounded-md overflow-y-auto">
+        {isLoading ? (
+          <div className="text-center py-8">
+            <p className="text-gray-600">Loading jobs...</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {filteredJobs.map((job) => (
             <div key={job.id} className="  p-4  transition-colors">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -164,7 +140,7 @@ const JobMatching = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div>)}
       </div>
       <AvailablePhlebotomists
         isOpen={openPhlebotomistsModal}

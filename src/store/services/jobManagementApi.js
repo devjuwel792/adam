@@ -5,6 +5,7 @@ const baseUrl = "http://10.10.13.22:8000";
 
 export const jobManagementApi = createApi({
   reducerPath: "jobManagementApi",
+  tagTypes: ['Jobs'],
   baseQuery: fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers, { getState }) => {
@@ -18,12 +19,21 @@ export const jobManagementApi = createApi({
   endpoints: (builder) => ({
     getJobsList: builder.query({
       query: () => "/dashboard/jobs/list/",
+      providesTags: ['Jobs'],
     }),
     getJobDetail: builder.query({
       query: (id) => `/dashboard/jobs/${id}/detail/`,
+    }),
+    updateJobStatus: builder.mutation({
+      query: ({ id, active_status }) => ({
+        url: `/dashboard/jobs/${id}/update-status/`,
+        method: 'POST',
+        body: { active_status },
+      }),
+      invalidatesTags: ['Jobs'],
     }),
   }),
 });
 
 // Export hooks for usage in functional components
-export const { useGetJobsListQuery, useGetJobDetailQuery } = jobManagementApi;
+export const { useGetJobsListQuery, useGetJobDetailQuery, useUpdateJobStatusMutation } = jobManagementApi;

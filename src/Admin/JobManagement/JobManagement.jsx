@@ -4,7 +4,11 @@ import DatePicker from "../DataPicker";
 import { FaAngleDown, FaBuilding } from "react-icons/fa6";
 import JobDetailsModal from "./JobDetailsModal";
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
-import { useGetJobsListQuery } from "../../store/services/jobManagementApi";
+import {
+  useGetJobsListQuery,
+  useUpdateJobStatusMutation,
+} from "../../store/services/jobManagementApi";
+import { toast } from "react-toastify";
 
 const JobManagement = ({ onMessage }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,17 +19,19 @@ const JobManagement = ({ onMessage }) => {
   const [visibleJobsCount, setVisibleJobsCount] = useState(10);
 
   const { data, error, isLoading } = useGetJobsListQuery();
+  const [updateJobStatus] = useUpdateJobStatusMutation();
 
-  const jobs = data?.jobs?.map((job) => ({
-    id: job.id,
-    title: job.title,
-    jobId: `#JOB-${job.id}`,
-    company: job.created_by,
-    location: job.location,
-    payRate: `$${job.pay_rate}/${job.pay_type}`,
-    postedTime: `Posted ${job.posted_hours_ago} hours ago`,
-    status: job.active_status,
-  })) || [];
+  const jobs =
+    data?.jobs?.map((job) => ({
+      id: job.id,
+      title: job.title,
+      jobId: `#JOB-${job.id}`,
+      company: job.created_by,
+      location: job.location,
+      payRate: `$${job.pay_rate}/${job.pay_type}`,
+      postedTime: `Posted ${job.posted_hours_ago} hours ago`,
+      status: job.active_status,
+    })) || [];
 
   // state for selected job status
   const [selectedJobStatus, setSelectedJobStatus] = useState({}); // { jobId: "Published" }
@@ -35,14 +41,24 @@ const JobManagement = ({ onMessage }) => {
     return (
       <div className="w-32">
         <SelectionDropdown
-          options={["Published", "Approved"]}
+          options={["Pending", "Approved"]}
           selected={selectedJobStatus[job.id] || job.status}
-          onSelect={(status) =>
-            setSelectedJobStatus((prev) => ({
-              ...prev,
-              [job.id]: status,
-            }))
-          }
+          onSelect={async (status) => {
+            try {
+              await updateJobStatus({
+                id: job.id,
+                active_status: status.toLowerCase(),
+              }).unwrap();
+              setSelectedJobStatus((prev) => ({
+                ...prev,
+                [job.id]: status,
+              }));
+              toast.success("Job status updated successfully!");
+            } catch (error) {
+              console.error("Failed to update job status:", error);
+              toast.error("Failed to update job status.");
+            }
+          }}
           icon={<FaAngleDown />} // icon pass করো
         />
       </div>
@@ -160,7 +176,9 @@ const JobManagement = ({ onMessage }) => {
 
                         <div className="flex items-center space-x-4 text-sm  mb-2">
                           <div className="flex items-center space-x-1">
-                            <span className="text-sm ">Job ID : {job.jobId}</span>
+                            <span className="text-sm ">
+                              Job ID : {job.jobId}
+                            </span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <FaBuilding />

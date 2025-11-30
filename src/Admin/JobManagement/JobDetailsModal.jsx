@@ -19,23 +19,34 @@ import {
   FaLocationDot,
 } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
-import { useGetJobDetailQuery } from "../../store/services/jobManagementApi";
+import {
+  useGetJobDetailQuery,
+  useUpdateJobStatusMutation,
+} from "../../store/services/jobManagementApi";
+import { toast } from "react-toastify";
 
 const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
   if (!isOpen) return null;
 
-  const { data: jobDetail, isLoading, error } = useGetJobDetailQuery(job?.id, {
+  const {
+    data: jobDetail,
+    isLoading,
+    error,
+  } = useGetJobDetailQuery(job?.id, {
     skip: !job?.id,
   });
+  const [updateJobStatus] = useUpdateJobStatusMutation();
 
-  const handleApprove = () => {
-    console.log("Job approved:", job?.jobId);
-    // Handle approval logic here
-  };
-
-  const handleDeny = () => {
-    console.log("Job denied:", job?.jobId);
-    // Handle denial logic here
+  const handleDecision = async (status) => {
+    try {
+      await updateJobStatus({ id: job?.id, active_status: status }).unwrap();
+      console.log(`Job ${status}:`, job?.jobId);
+      toast.success(`Job ${status} successfully!`);
+      onClose(); // Close modal after decision
+    } catch (error) {
+      console.error(`Failed to ${status} job:`, error);
+      toast.error(`Failed to ${status} job.`);
+    }
   };
 
   const handleMessage = () => {
@@ -50,9 +61,33 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white max-w-[70vw] w-full max-h-[90vh] overflow-y-auto flex items-center justify-center">
-          <p className="text-gray-600">Loading job details...</p>
+      <div>
+        <div className="sticky top-0 ">
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={onClose}
+              className="text-gray-400 transition-colors h-8 w-8 bg-gray-200 flex items-center justify-center rounded-full"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white max-w-[70vw] w-full max-h-[90vh] overflow-y-auto flex items-center justify-center">
+            <p className="text-gray-600">Loading job details...</p>
+          </div>
         </div>
       </div>
     );
@@ -60,9 +95,33 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
 
   if (error) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white max-w-[70vw] w-full max-h-[90vh] overflow-y-auto flex items-center justify-center">
-          <p className="text-red-600">Error loading job details.</p>
+      <div>
+        <div className="sticky top-0 ">
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={onClose}
+              className="text-gray-400 transition-colors h-8 w-8 bg-gray-200 flex items-center justify-center rounded-full"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white max-w-[70vw] w-full max-h-[90vh] overflow-y-auto flex items-center justify-center">
+            <p className="text-red-600">Error loading job details.</p>
+          </div>
         </div>
       </div>
     );
@@ -102,21 +161,29 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
               </h2>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                 <span>Job ID: #JOB-{jobDetail?.id}</span>
-                <span>Posted: {new Date(jobDetail?.created_on).toLocaleDateString()}</span>
+                <span>
+                  Posted: {new Date(jobDetail?.created_on).toLocaleDateString()}
+                </span>
               </div>
-                <div className="flex items-center justify-between space-x-4 ">
+              <div className="flex items-center justify-between space-x-4 ">
                 <div className="flex items-center  gap-1">
                   <FaBriefcase className="text-[#00A6A6]" />
-                  <span className=" py-1 text-sm ">{jobDetail?.job_types} {jobDetail?.profession_type}</span>
+                  <span className=" py-1 text-sm ">
+                    {jobDetail?.job_types} {jobDetail?.profession_type}
+                  </span>
                 </div>
                 <div className="flex items-center  gap-1">
                   <FaDollarSign className="text-[#00A6A6]" />
-                  <span className=" py-1 text-sm ">${jobDetail?.pay_rate}/{jobDetail?.pay_type}</span>
+                  <span className=" py-1 text-sm ">
+                    ${jobDetail?.pay_rate}/{jobDetail?.pay_type}
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-1">
                   <FaCalendar className="text-[#00A6A6]" />
-                  <span className=" py-1 text-sm ">Start: {new Date(jobDetail?.date).toLocaleDateString()}</span>
+                  <span className=" py-1 text-sm ">
+                    Start: {new Date(jobDetail?.date).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             </div>
@@ -179,13 +246,13 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
                 <p className="text-sm text-gray-600 mb-4">Decision</p>
                 <div className="flex space-x-3">
                   <button
-                    onClick={handleApprove}
+                    onClick={() => handleDecision("approved")}
                     className=" bg-[#C9A14A] flex items-center gap-1 text-white px-4 py-2 rounded-lg font-medium transition-colors"
                   >
                     <FaCheck /> Approve Profile
                   </button>
                   <button
-                    onClick={handleDeny}
+                    onClick={() => handleDecision("denied")}
                     className=" bg-white  flex items-center gap-1 text-red-600 border border-red-600 px-4 py-2 rounded-lg font-medium transition-colors"
                   >
                     <FaTimes /> Deny Profile

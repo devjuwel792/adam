@@ -1,13 +1,31 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const jobMatchingApi = createApi({
-  reducerPath: 'jobMatchingApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://10.10.13.22:8000' }),
+  reducerPath: "jobMatchingApi",
+  baseQuery: fetchBaseQuery({ baseUrl: "http://10.10.13.22:8000" }),
   endpoints: (builder) => ({
     getJobMatchingList: builder.query({
-      query: () => '/dashboard/jobs/matching/list/',
+      query: () => "/dashboard/jobs/matching/list/",
+    }),
+    getAvailablePhlebotomists: builder.query({
+      query: () => "/dashboard/jobs/matching/phlebotomists/available/",
+    }),
+    getPhlebotomistProfile: builder.query({
+      query: (id) => `/dashboard/jobs/matching/phlebotomist/${id}/profile/`,
+    }),
+    assignJobToPhlebotomist: builder.mutation({
+      query: (body) => ({
+        url: "/dashboard/jobs/matching/phlebotomist/assign/",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
 
-export const { useGetJobMatchingListQuery } = jobMatchingApi;
+export const {
+  useGetJobMatchingListQuery,
+  useGetAvailablePhlebotomistsQuery,
+  useGetPhlebotomistProfileQuery,
+  useAssignJobToPhlebotomistMutation,
+} = jobMatchingApi;

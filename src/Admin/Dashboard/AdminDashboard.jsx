@@ -48,10 +48,7 @@ export default function AdminDashboard() {
   const { data: pendingPhlebotomistsData } = useGetPendingPhlebotomistsQuery();
   const { data: pendingBusinessOwnersData } =
     useGetPendingBusinessOwnersQuery();
-  console.log(
-    "🚀 ~ AdminDashboard ~ pendingBusinessOwnersData:",
-    pendingBusinessOwnersData
-  );
+
 
   const handleComponentChange = (component) => {
     if (component === "Logout") {

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RichTextEditor from "./RichTextEditor";
+import { useGetPrivacyPolicyQuery } from "../../store/services/settingApi";
 
 const PrivacyPolicy = ({ onBack }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { data: privacyData, error: privacyError, isLoading: privacyLoading } = useGetPrivacyPolicyQuery();
   const [content, setContent] = useState({
     intro: [
       "Welcome to [Your App Name]. Your privacy is important to us.",
@@ -47,6 +49,23 @@ const PrivacyPolicy = ({ onBack }) => {
     contactUs:
       "For any questions or privacy concerns, contact us at [Your Support Email].",
   });
+
+  // Update content when API data is loaded
+  useEffect(() => {
+    if (privacyData) {
+      setContent({
+        intro: privacyData.intro || content.intro,
+        informationWeCollect: privacyData.informationWeCollect || content.informationWeCollect,
+        howWeUseData: privacyData.howWeUseData || content.howWeUseData,
+        dataSharingAndSecurity: privacyData.dataSharingAndSecurity || content.dataSharingAndSecurity,
+        userControlAndChoices: privacyData.userControlAndChoices || content.userControlAndChoices,
+        dataRetention: privacyData.dataRetention || content.dataRetention,
+        childrensPrivacy: privacyData.childrensPrivacy || content.childrensPrivacy,
+        changesToPolicy: privacyData.changesToPolicy || content.changesToPolicy,
+        contactUs: privacyData.contactUs || content.contactUs,
+      });
+    }
+  }, [privacyData]);
 
   const handleEdit = () => {
     if (isEditing) {

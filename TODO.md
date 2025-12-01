@@ -1,3 +1,2 @@
-- [ ] Add updateUserStatus mutation to userManagementApi.js
-- [ ] Integrate updateUserStatus in DetailedUserProfile.jsx on Pending button
-- [ ] Test the integration
+- [x] Add getAvailablePhlebotomists endpoint to jobMatchingApi.js
+- [x] Update AvailablePhlebotomists.jsx to integrate API data

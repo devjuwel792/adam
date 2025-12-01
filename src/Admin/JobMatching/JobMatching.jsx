@@ -12,16 +12,22 @@ const JobMatching = () => {
 
   const { data, error, isLoading } = useGetJobMatchingListQuery();
 
-  const jobs = data?.jobs?.map((job) => ({
-    id: job.id,
-    title: job.title,
-    company: job.created_by,
-    distance: "2.1 miles away", // Placeholder, as not in API
-    timeSlot: `${job.start_time} - ${job.end_time}`,
-    date: new Date(job.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    duration: job.total_working_hour,
-    payRate: `$${job.pay_rate}/${job.pay_type}`,
-  })) || [];
+  const jobs =
+    data?.jobs?.map((job) => ({
+      id: job.id,
+      title: job.title,
+      company: job.created_by,
+      distance: "2.1 miles away", // Placeholder, as not in API
+      timeSlot: `${job.start_time} - ${job.end_time}`,
+      date: new Date(job.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+      duration: job.total_working_hour,
+      payRate: `$${job.pay_rate}/${job.pay_type}`,
+    })) || [];
+  const [selectedJob, setSelectedJob] = useState(null);
 
   const filteredJobs = jobs.filter(
     (job) =>
@@ -31,7 +37,7 @@ const JobMatching = () => {
 
   return (
     // <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div  style={{ fontFamily: "Montserrat" }} className="bg-white w-full  ">
+    <div style={{ fontFamily: "Montserrat" }} className="bg-white w-full  ">
       {/* Search and Filters */}
       <div className="p-6 border rounded-md m-5 ml-0 border-gray-200">
         <div className="flex flex-col sm:flex-row gap-4">
@@ -96,55 +102,63 @@ const JobMatching = () => {
         ) : (
           <div className="divide-y divide-gray-200">
             {filteredJobs.map((job) => (
-            <div key={job.id} className="  p-4  transition-colors">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">
-                    {job.title}
-                  </h3>
-                  <p className="text-gray-600 mb-2">{job.company}</p>
+              <div
+                onClick={() => setSelectedJob(job)}
+                key={job.id}
+                className="  p-4  transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-medium text-gray-900 mb-1">
+                      {job.title}
+                    </h3>
+                    <p className="text-gray-600 mb-2">{job.company}</p>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <FaLocationDot className="text-[#00A6A6]" />
-                      <span>{job.distance}</span>
-                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <FaLocationDot className="text-[#00A6A6]" />
+                        <span>{job.distance}</span>
+                      </div>
 
-                    <div className="flex items-center gap-1">
-                      <FaClock className="text-[#00A6A6]" />
-                      <span>{job.timeSlot}</span>
-                    </div>
+                      <div className="flex items-center gap-1">
+                        <FaClock className="text-[#00A6A6]" />
+                        <span>{job.timeSlot}</span>
+                      </div>
 
-                    <div className="flex items-center gap-1">
-                      <FaCalendar className="text-[#00A6A6]" />
-                      <span>{job.date}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
-                  <div className="text-right">
-                    <div className="text-sm text-gray-500">{job.duration}</div>
-                    <div className="text-lg font-semibold text-gray-900">
-                      {job.payRate}
+                      <div className="flex items-center gap-1">
+                        <FaCalendar className="text-[#00A6A6]" />
+                        <span>{job.date}</span>
+                      </div>
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => setOpenPhlebotomistsModal(true)}
-                    className=" text-white bg-gradient-to-r from-[#887113] to-[#C9A14A] text-sm px-4 py-1 rounded-lg font-medium transition-colors"
-                  >
-                    Invite
-                  </button>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">
+                        {job.duration}
+                      </div>
+                      <div className="text-lg font-semibold text-gray-900">
+                        {job.payRate}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setOpenPhlebotomistsModal(true)}
+                      className=" text-white bg-gradient-to-r from-[#887113] to-[#C9A14A] text-sm px-4 py-1 rounded-lg font-medium transition-colors"
+                    >
+                      Invite
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>)}
+            ))}
+          </div>
+        )}
       </div>
       <AvailablePhlebotomists
         isOpen={openPhlebotomistsModal}
         onClose={() => setOpenPhlebotomistsModal(false)}
+        job={selectedJob}
       />
     </div>
     // </div>

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Avatar from "../../assets/images/Image-52.png";
 import { FaCheck } from "react-icons/fa6";
-import { useGetPhlebotomistProfileQuery, useAssignJobToPhlebotomistMutation } from "../../store/services/jobMatchingApi";
+import {
+  useGetPhlebotomistProfileQuery,
+  useAssignJobToPhlebotomistMutation,
+} from "../../store/services/jobMatchingApi";
 import { toast } from "react-toastify";
 
 const ProfessionalComparison = ({ isOpen, onClose, phlebotomistId, jobId }) => {
@@ -72,7 +75,9 @@ const ProfessionalComparison = ({ isOpen, onClose, phlebotomistId, jobId }) => {
               <h3 className="font-semibold text-gray-900">
                 {profile?.user?.full_name || "Loading..."}
               </h3>
-              <p className="text-sm text-gray-600">Certified Phlebotomist</p>
+              <p className="text-sm text-gray-600">
+                Certified Phlebotomist - {profile?.speciality || "General"}
+              </p>
               <div className="flex items-center space-x-1">
                 <div className="flex text-yellow-400">{"★".repeat(5)}</div>
                 <span className="text-sm text-gray-600">4.9 (127 reviews)</span>
@@ -116,7 +121,7 @@ const ProfessionalComparison = ({ isOpen, onClose, phlebotomistId, jobId }) => {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-semibold text-yellow-500">
-                    3.2
+                    {profile?.years_of_experience || 0}
                   </div>
                   <div className="text-sm text-gray-600">Years Experience</div>
                 </div>
@@ -145,7 +150,31 @@ const ProfessionalComparison = ({ isOpen, onClose, phlebotomistId, jobId }) => {
                   </div>
                 </div>
               </div>
-
+              {/* Weekly Availability */}
+              <div className="my-6">
+                <h4 className="font-semibold text-gray-900 mb-4">
+                  Weekly Availability
+                </h4>
+                <div className="space-y-2">
+                  {profile?.weekly_schedule?.map((schedule, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center p-2 bg-gray-50 rounded-lg"
+                    >
+                      <span className="font-medium text-gray-900">
+                        {schedule.day}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {schedule.start_time} - {schedule.end_time}
+                      </span>
+                    </div>
+                  )) || (
+                    <div className="text-sm text-gray-600">
+                      No schedule available
+                    </div>
+                  )}
+                </div>
+              </div>
               {/* Individual Review */}
               <div className="space-y-4 pb-3 border-b">
                 <div className="flex space-x-3">
@@ -247,6 +276,70 @@ const ProfessionalComparison = ({ isOpen, onClose, phlebotomistId, jobId }) => {
                       </div>
                       <div className="text-sm text-gray-600">
                         Verified • Expires 08/2025
+                      </div>
+                    </div>
+                  </div>
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+
+                {/* Service Area */}
+                <div className="flex items-center justify-between p-3 bg-[#FFFCFA] cursor-pointer hover:bg-[#FFF8EF] border hover:border-[#C9A14A] rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-[#EFB944] text-white rounded-full flex items-center justify-center">
+                      <FaCheck />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        Service Area
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {profile?.service_area || "Not Specified"}
+                      </div>
+                    </div>
+                  </div>
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </div>
+
+                {/* Work Preference */}
+                <div className="flex items-center justify-between p-3 bg-[#FFFCFA] cursor-pointer hover:bg-[#FFF8EF] border hover:border-[#C9A14A] rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-[#EFB944] text-white rounded-full flex items-center justify-center">
+                      <FaCheck />
+                    </div>
+                    <div>
+                      <div className="font-medium text-gray-900">
+                        Work Preference
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {profile?.work_preferable
+                          ? profile.work_preferable
+                              .replace("_", " ")
+                              .toUpperCase()
+                          : "Not Specified"}
                       </div>
                     </div>
                   </div>

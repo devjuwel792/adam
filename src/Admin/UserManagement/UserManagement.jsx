@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
 import Avatar from "@/assets/images/Image-52.png";
+import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
-import { FaAngleDown } from "react-icons/fa6";
-import DetailedUserProfile from "./DetailedUserProfile";
-import AppointmentDetails from "./AppointmentDetails";
+import { toast } from "react-toastify";
+import { useGetUsersListQuery, useUpdateUserStatusMutation } from "../../store/services/userManagementApi";
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
-import { useGetUsersListQuery } from "../../store/services/userManagementApi";
+import AppointmentDetails from "./AppointmentDetails";
+import DetailedUserProfile from "./DetailedUserProfile";
 
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +16,18 @@ const UserManagement = () => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const { data: usersData, isLoading, error } = useGetUsersListQuery();
+  const [updateUserStatus] = useUpdateUserStatusMutation();
+
+  const handleUpdateStatus = async (userId, status) => {
+    try {
+      await updateUserStatus({ userId, status }).unwrap();
+      handleStatusChange(userId, status);
+      toast.success("Status updated successfully!");
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      toast.error("Failed to update status.");
+    }
+  };
 
   const [userList, setUserList] = useState([]);
 
@@ -76,14 +88,15 @@ const UserManagement = () => {
     return (
       <div className="w-28">
         <SelectionDropdown
-          options={["pending", "active", "draft"]}
+          options={["pending", "approved"]}
           selected={selectedAction[user.id] || user.status} // user unique id অনুযায়ী
-          onSelect={(action) =>
+          onSelect={(action) => {
             setSelectedAction((prev) => ({
               ...prev,
               [user.id]: action,
-            }))
-          }
+            }));
+            handleUpdateStatus(user.id, action);
+          }}
         />
       </div>
     );

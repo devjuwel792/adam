@@ -21,21 +21,21 @@ export default function Terms() {
 
         {/* Hero Text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-7xl md:text-8xl font-bold text-white mb-4 tracking-wide text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-4 tracking-wide text-center">
             Terms & Condition
           </h1>
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-3xl shadow-md border border-[#A1A1A1]/14 p-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+        <div className="bg-white rounded-3xl shadow-md border border-[#A1A1A1]/14 p-6 sm:p-8">
           {/* Header */}
-          <div className="flex justify-between items-center mb-8 pb-6 border-b border-[#E5E7EB]">
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8 pb-6 border-b border-[#E5E7EB]">
             <h2 className="text-2xl font-semibold text-[#C9A14A]">
               Terms & Condition
             </h2>
-            <div className="flex items-center text-[#6B7280] text-sm">
+            <div className="flex items-center text-[#6B7280] text-sm self-start md:self-center">
               Last updated: July 19, 2025
             </div>
           </div>
@@ -90,7 +90,7 @@ export default function Terms() {
 
             <div className="bg-[#EFF6FF] border-l-4 border-[#C9C9C9] p-4 rounded-r-lg">
               <div className="flex gap-2 items-center">
-                <img src={i} alt="" />
+                <img src={i} alt="Information icon" />
                 <span className="text-blue-800 font-medium text-sm">
                   Average processing time: 2-3 business days
                 </span>

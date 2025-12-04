@@ -1,10 +1,29 @@
 "use client";
-
 import { Calendar, Clock } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export function ServiceDetailsSection({ formData, onInputChange }) {
+export function ServiceDetailsSection({ formData, onInputChange, services, isLoading }) {
+  // Create a unique list of hospitals for the dropdown
+  const hospitals = services
+    ? [...new Set(services.map((s) => s.hospital_name))]
+    : [];
+
+  const handlePackageChange = (e) => {
+    const selectedServiceId = e.target.value;
+    onInputChange("testPackage", selectedServiceId);
+
+    // Find the selected service to get its hospital name
+    const selectedService = services?.find((s) => s.id === selectedServiceId);
+
+    if (selectedService) {
+      onInputChange("hospital", selectedService.hospital_name);
+    } else {
+      // Reset hospital if "Select test package" is chosen
+      onInputChange("hospital", "");
+    }
+  };
+
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-lg p-6">
       <div className="flex items-center gap-3 mb-6">
@@ -28,13 +47,18 @@ export function ServiceDetailsSection({ formData, onInputChange }) {
           <select
             id="testPackage"
             value={formData.testPackage}
-            onChange={(e) => onInputChange("testPackage", e.target.value)}
+            onChange={handlePackageChange}
             className="w-full border border-gray-300 rounded-md p-2"
+            disabled={isLoading}
           >
-            <option value="">Select test package</option>
-            <option value="basic">Basic Panel</option>
-            <option value="comprehensive">Comprehensive Panel</option>
-            <option value="executive">Executive Panel</option>
+            <option value="">
+              {isLoading ? "Loading packages..." : "Select test package"}
+            </option>
+            {services?.map((service) => (
+              <option key={service.id} value={service.id}>
+                {service.title}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -145,13 +169,18 @@ export function ServiceDetailsSection({ formData, onInputChange }) {
               <select
                 id="hospital"
                 value={formData.hospital}
-                onChange={(e) => onInputChange("hospital", e.target.value)}
+                onChange={(e) => onInputChange("hospital", e.target.value)} // Manual selection is still possible
                 className="w-full border border-gray-300 rounded-md p-2"
+                disabled={isLoading}
               >
-                <option value="">Select</option>
-                <option value="general">General Hospital</option>
-                <option value="medical-center">Medical Center</option>
-                <option value="clinic">Community Clinic</option>
+                <option value="">
+                  {isLoading ? "Loading hospitals..." : "Select Hospital"}
+                </option>
+                {hospitals.map((hospitalName) => (
+                  <option key={hospitalName} value={hospitalName}>
+                    {hospitalName}
+                  </option>
+                ))}
               </select>
             </div>
 

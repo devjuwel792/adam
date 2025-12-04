@@ -20,17 +20,17 @@ export default function PartnershipApplication() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-20">
-      <div className="text-center mb-8">
-        <h2 className="text-4xl font-bold text-[#111827] mb-2">
+    <div className="bg-gray-50 py-16 md:py-20 lg:py-24">
+      <div className="text-center mb-12 md:mb-16 px-4">
+        <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] mb-4">
           Partnership Application
         </h2>
-        <p className="text-[#4B5563] text-xl">
+        <p className="text-lg sm:text-xl text-[#4B5563] max-w-2xl mx-auto">
           Take the first step towards expanding your healthcare services
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 p-8 bg-white rounded-2xl shadow-2xl max-w-4xl mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-6 p-6 sm:p-8 bg-white rounded-2xl shadow-lg max-w-4xl mx-auto">
         {/* Organization + Contact Person */}
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -204,7 +204,7 @@ export default function PartnershipApplication() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-[#C9A14A] hover:bg-[#C9A14A]/95 text-white font-semibold text-lg py-3 rounded-lg "
+          className="w-full bg-[#C9A14A] hover:bg-amber-600 text-white font-semibold text-lg py-3 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           disabled={!formData.agreeToTerms}
         >
           Submit Partnership Application

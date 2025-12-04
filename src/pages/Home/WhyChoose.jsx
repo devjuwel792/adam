@@ -6,61 +6,70 @@ import safe from "../../assets/images/safe.png";
 import clock from "../../assets/images/clock.png";
 
 export const WhyChoose = () => {
+  const features = [
+    {
+      icon: clock,
+      title: "Fast Results",
+      description: "Get your test results within 24-48 hours via secure digital delivery.",
+    },
+    {
+      icon: home,
+      title: "Home Convenience",
+      description: "Professional blood tests in the comfort of your home. No travel, no waiting rooms.",
+    },
+    {
+      icon: safe,
+      title: "100% Safe & Secure",
+      description: "HIPAA compliant with strict safety protocols and secure data handling.",
+    },
+    {
+      icon: dr,
+      title: "Certified Professionals",
+      description: "Licensed phlebotomists and healthcare professionals ensure safe, accurate results.",
+    },
+  ];
+
   return (
-    <section id="why-choose" className="py-16 mb-24">
-      <div className="text-center">
-        <h2 className="text-4xl font-bold text-gray-900">
-          Why Choose Primepath?
-        </h2>
-        <p className="text-xl text-gray-900 pt-2 max-w-3xl mx-auto">
-          Experience the convenience of professional healthcare services
-          delivered to <br /> your doorstep with uncompromising quality and
-          reliability.
-        </p>
-      </div>
-      <div className="mt-16 px-32 flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex flex-col">
-          <div className="p-6 flex flex-col gap-3  items-center justify-center">
-            <img src={clock} alt="" className="w-16 h-16" />
-            <p className="font-semibold text-xl">Fast Results</p>
-            <p className="text-base text-center w-56">
-              Get your test results within <br /> 24-48 hours via secure <br />{" "}
-              digital delivery.
-            </p>
-          </div>
-          <div className="p-6 flex flex-col gap-3  items-center justify-center">
-            <img src={home} alt="" className="w-16 h-16" />
-            <p className="font-semibold text-xl">Home Convenience</p>
-            <p className="text-base text-center w-56">
-              Professional blood tests in the comfort of your home. No travel,
-              no waiting rooms.
-            </p>
-          </div>
+    <section id="why-choose" className="py-16 md:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Why Choose Primepath?
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
+            Experience the convenience of professional healthcare services
+            delivered to your doorstep with uncompromising quality and
+            reliability.
+          </p>
         </div>
 
-        <div>
-          <img src={box} alt="" className="w-80 h-80" />
-        </div>
-
-        <div className="flex flex-col">
-          <div className="p-6 flex flex-col gap-3  items-center justify-center">
-            <img src={safe} alt="" className="w-16 h-16" />
-            <p className="font-semibold text-xl">100% Safe & Secure</p>
-            <p className="text-base text-center w-56">
-              HIPAA compliant with strict safety protocols and secure data
-              handling.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-4 items-center">
+          {/* Left Column */}
+          <div className="space-y-8">
+            <FeatureCard {...features[0]} />
+            <FeatureCard {...features[1]} />
           </div>
-          <div className="p-6 flex flex-col gap-3  items-center justify-center">
-            <img src={dr} alt="" className="w-16 h-16" />
-            <p className="font-semibold text-xl">Certified Professionals</p>
-            <p className="text-base text-center w-56">
-              Licensed phlebotomists and healthcare professionals ensure safe,
-              accurate results.
-            </p>
+
+          {/* Center Image - order-first on mobile/tablet, order-none on desktop */}
+          <div className="order-first md:order-none lg:order-none flex justify-center items-center">
+            <img src={box} alt="Primepath service box" className="w-64 h-64 sm:w-80 sm:h-80 object-contain" />
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-8">
+            <FeatureCard {...features[2]} />
+            <FeatureCard {...features[3]} />
           </div>
         </div>
       </div>
     </section>
   );
 };
+
+const FeatureCard = ({ icon, title, description }) => (
+  <div className="p-6 flex flex-col gap-3 items-center text-center">
+    <img src={icon} alt={`${title} icon`} className="w-16 h-16" />
+    <p className="font-semibold text-xl">{title}</p>
+    <p className="text-base text-gray-600 max-w-xs">{description}</p>
+  </div>
+);

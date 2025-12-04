@@ -9,28 +9,28 @@ const HealthcareProcess = () => {
   const steps = [
     {
       number: 1,
-      icon: <img src={book} alt="" />,
+      icon: <img src={book} alt="Booking icon" />,
       title: "Book Your Service",
       description:
         "Schedule your appointment online or by phone at your preferred time and location.",
     },
     {
       number: 2,
-      icon: <img src={dr} alt="" />,
+      icon: <img src={dr} alt="Doctor icon" />,
       title: "Professional Arrives",
       description:
         "Our licensed healthcare professional arrives at your location with all necessary equipment.",
     },
     {
       number: 3,
-      icon: <img src={heart} alt="" />,
+      icon: <img src={heart} alt="Heart icon" />,
       title: "Receive Your Care",
       description:
         "Experience professional healthcare services in the comfort and privacy of your own space.",
     },
     {
       number: 4,
-      icon: <img src={tic} alt="" />,
+      icon: <img src={tic} alt="Checkmark icon" />,
       title: "Enjoy Easy Recovery",
       description:
         "Receive your results and follow-up care instructions, all while staying comfortable at home.",
@@ -83,14 +83,14 @@ const HealthcareProcess = () => {
   return (
     <div className="bg-[#FAF6ED] min-h-screen">
       {/* How it Works Section */}
-      <div className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
+      <div className="py-16 md:py-20 lg:py-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-[#2c2c2c] mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-4">
               How it Works
             </h2>
-            <p className="text-[#4B5563] text-xl">
+            <p className="text-lg sm:text-xl text-[#4B5563]">
               Simple steps to receive professional healthcare at your
               convenience
             </p>
@@ -126,14 +126,14 @@ const HealthcareProcess = () => {
       </div>
 
       {/* Transparent Pricing Section */}
-      <div className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
+      <div className="py-16 md:py-20 lg:py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-[#2c2c2c] mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-4">
               Transparent Pricing
             </h2>
-            <p className="text-[#4B5563] text-xl">
+            <p className="text-lg sm:text-xl text-[#4B5563]">
               Clear, upfront pricing with no hidden fees
             </p>
           </div>
@@ -145,7 +145,7 @@ const HealthcareProcess = () => {
                 key={index}
                 className={`relative rounded-lg p-6 ${
                   plan.isPopular
-                    ? "bg-[#C9A14A] text-white shadow-xl transform scale-105"
+                    ? "bg-[#C9A14A] text-white shadow-xl transform md:scale-105"
                     : "bg-white border border-gray-200 shadow-sm"
                 }`}
               >
@@ -170,7 +170,7 @@ const HealthcareProcess = () => {
                 {/* Price */}
                 <div className="mb-6">
                   <span
-                    className={`text-4xl font-bold ${
+                    className={`text-3xl sm:text-4xl font-bold ${
                       plan.isPopular ? "text-white" : "text-[#C9A14A]"
                     }`}
                   >

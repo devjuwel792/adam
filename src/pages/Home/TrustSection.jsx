@@ -11,10 +11,10 @@ export function TrustSection() {
   const trustLogos = [trust1, trust2, trust3, trust4, trust5];
 
   return (
-    <section className="bg-[#FDFCF8] py-16 mb-24">
+    <section className="bg-[#FDFCF8] py-12 sm:py-16 mb-16 sm:mb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center space-y-8">
-          <h2 className="text-2xl font-bold text-gray-900">
+        <div className="text-center space-y-6 sm:space-y-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
             Trusted by Healthcare Leaders
           </h2>
 
@@ -36,7 +36,7 @@ export function TrustSection() {
                   key={i}
                   src={logo}
                   alt={`trust-${i}`}
-                  className="w-32 h-auto mx-6 object-contain"
+                  className="w-28 sm:w-32 h-auto mx-4 sm:mx-6 object-contain"
                 />
               ))}
             </div>

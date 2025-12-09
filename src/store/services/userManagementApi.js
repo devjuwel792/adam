@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // User Management API slice
-const baseUrl = "http://10.10.13.22:8000";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const userManagementApi = createApi({
   reducerPath: "userManagementApi",

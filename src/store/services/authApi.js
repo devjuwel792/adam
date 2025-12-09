@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // Example API slice using RTK Query. Update `baseUrl` and endpoints as needed.
 
-const baseUrl = "http://10.10.13.22:8000";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({

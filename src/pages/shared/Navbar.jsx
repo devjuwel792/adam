@@ -97,7 +97,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <nav className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center font-medium text-lg text-[#2c2c2c]">
+          <nav className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center font-medium text-base text-[#2c2c2c]">
             <NavLink to="/services" onClick={closeMenu}>Services</NavLink>
             <Link
               to="why-choose"

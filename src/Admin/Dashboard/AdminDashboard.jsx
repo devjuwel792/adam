@@ -24,7 +24,8 @@ import Header from "./Header";
 import QuickStats, { ActivityCard } from "./QuickStats";
 import { Sidebar } from "./Sidebar";
 import { StatCard } from "./StatCard";
-import ClientManagement from "../UserManagement/ClientManagement";
+import PatientManagement from "../UserManagement/PatientManagement";
+
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
@@ -90,6 +91,8 @@ export default function AdminDashboard() {
                   ? "Welcome back, Admin Fariha"
                   : currentComponent === "User Management"
                   ? "User Management"
+                  : currentComponent === "Patient Management"
+                  ? "Patient Management"
                   : currentComponent === "Job Management"
                   ? "Job Management"
                   : currentComponent === "Dispute Management"
@@ -111,6 +114,8 @@ export default function AdminDashboard() {
                   ? "Here's what's happening with Phlebotomist today"
                   : currentComponent === "User Management"
                   ? "Manage all registered users on the platform"
+                  : currentComponent === "Patient Management"
+                  ? "Manage all registered patients on the platform"
                   : currentComponent === "Client Management"
                   ? "Manage all registered clients on the platform"
                   : currentComponent === "Job Management"
@@ -256,7 +261,7 @@ export default function AdminDashboard() {
             </div>
           )}
           {currentComponent === "User Management" && <UserManagement />}
-          {currentComponent === "Client Management" && <ClientManagement />}
+          {currentComponent === "Patient Management" && <PatientManagement />}
           {currentComponent === "Job Management" && (
             <JobManagement
               onMessage={() => {

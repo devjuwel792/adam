@@ -15,7 +15,7 @@ export const Sidebar = ({ currentComponent, onMenuClick }) => {
   const menuItems = [
     { icon: House, label: "Dashboard", active: true },
     { icon: Users, label: "User Management" },
-    { icon: Users, label: "Client Management" },
+    { icon: Users, label: "Patient Management" },
     { icon: BriefcaseBusiness, label: "Job Management" },
     { icon: Handshake, label: "Dispute Management" },
     { icon: MessageCircleMore, label: "Communication & Reviews" },

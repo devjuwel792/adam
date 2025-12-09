@@ -10,7 +10,7 @@ import SelectionDropdown from "../Dashboard/SelectionDropdown";
 import AppointmentDetails from "./AppointmentDetails";
 import DetailedUserProfile from "./DetailedUserProfile";
 
-const ClientManagement = () => {
+const PatientManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("All Roles");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
@@ -201,89 +201,32 @@ const ClientManagement = () => {
       <div className=" space-y-3 my-6">
         {filteredUsers.map((user) => (
           <div key={user.id}>
-            {user.role === "phlebotomist" && (
-              <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    {/* Avatar */}
-                    <img
-                      src={user.avatar || "/placeholder.svg"}
-                      alt={user.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-
-                    {/* User Info */}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {user.name}
-                      </h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(
-                            user.role
-                          )}`}
-                        >
-                          {user.role}
-                        </span>
-                        <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
-                            user.status
-                          )}`}
-                        >
-                          {user.status}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          Joined: {user.joinDate}
-                        </span>
-                      </div>
+            <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {user.name}
+                    </h3>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="text-sm text-gray-500">
+                        ID: {user.id}
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedUser(user);
-                        setIsProfileOpen(true);
-                      }}
-                      // onClick={() => handleStatusChange(user.id, "Approved")}
-                      className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
-                    >
-                      <FaEye /> View
-                    </button>
-                    {getActionButton(user)}
-                  </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    // onClick={() => handleStatusChange(user.id, "Approved")}
+                    onClick={() => setIsAppointmentOpen(true)}
+                    className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
+                  >
+                    <FaEye /> View
+                  </button>
                 </div>
               </div>
-            )}
-            {user.role !== "phlebotomist" && (
-              <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {user.name}
-                      </h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="text-sm text-gray-500">
-                          ID: {user.id}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      // onClick={() => handleStatusChange(user.id, "Approved")}
-                      onClick={() => setIsAppointmentOpen(true)}
-                      className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
-                    >
-                      <FaEye /> View
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         ))}
       </div>
@@ -331,4 +274,4 @@ const ClientManagement = () => {
   );
 };
 
-export default ClientManagement;
+export default PatientManagement;

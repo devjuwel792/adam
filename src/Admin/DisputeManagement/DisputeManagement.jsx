@@ -107,7 +107,7 @@ function DisputeManagement() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-medium">
-                  Under Review
+                  Total Solved
                 </p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">5</p>
               </div>
@@ -127,7 +127,7 @@ function DisputeManagement() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-medium">
-                  Resolved Today
+                  Solved Today
                 </p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">8</p>
               </div>

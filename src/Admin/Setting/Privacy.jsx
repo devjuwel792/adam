@@ -2,52 +2,34 @@
 
 import { useState, useEffect } from "react";
 import RichTextEditor from "./RichTextEditor";
-import { useGetPrivacyPolicyQuery } from "../../store/services/settingApi";
+import {
+  useGetPrivacyPolicyQuery,
+  useUpdatePrivacyPolicyMutation,
+} from "../../store/services/settingApi";
 
 const PrivacyPolicy = ({ onBack }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const { data: privacyData, error: privacyError, isLoading: privacyLoading } = useGetPrivacyPolicyQuery();
+  const {
+    data,
+    error: privacyError,
+    isLoading: privacyLoading,
+  } = useGetPrivacyPolicyQuery();
+
+  const privacyData = data ? JSON.parse(data.content) : null;
+  const [
+    updatePrivacyPolicy,
+    { isLoading: updateLoading, error: updateError },
+  ] = useUpdatePrivacyPolicyMutation();
   const [content, setContent] = useState({
-    intro: [
-      "Welcome to [Your App Name]. Your privacy is important to us.",
-      "This Privacy Policy explains how we collect, use, and protect your data when you use our AI voice cloning platform.",
-    ],
-    informationWeCollect: [
-      "Personal Information: Name, email, and account details.",
-      "Voice Data: Audio samples uploaded for AI voice cloning.",
-      "Usage Data: Interactions with our platform, such as settings, preferences, and feedback.",
-      "Payment Information: Processed securely through third-party payment providers.",
-    ],
-    howWeUseData: [
-      "Provide and improve our AI voice cloning services.",
-      "Personalize your AI-generated voice experience.",
-      "Enhance AI accuracy based on user interactions.",
-      "Ensure security and prevent fraudulent activities.",
-      "Send updates, promotions, or important notifications (you can opt out anytime).",
-    ],
-    dataSharingAndSecurity: [
-      "We do not sell your personal data to third parties.",
-      "Voice data is processed securely and used solely for AI training within your account.",
-      "We may share necessary data with service providers (e.g., payment processors) under strict confidentiality agreements.",
-      "Data is protected with encryption and security measures to prevent unauthorized access.",
-    ],
-    userControlAndChoices: [
-      "You can update or delete your account information from the My Profile section.",
-      "You can request data deletion by contacting [Your Support Email].",
-      "You can manage communication preferences (e.g., email notifications).",
-    ],
-    dataRetention: [
-      "We retain user data only as long as necessary to provide our services.",
-      "Upon account deletion, personal data is permanently removed, except as required by law.",
-    ],
-    childrensPrivacy: [
-      "Our platform is not intended for users under the age of [age].",
-      "We do not knowingly collect data from minors.",
-    ],
-    changesToPolicy:
-      "We may update this Privacy Policy from time to time. Continued use of the platform after updates means you accept the changes.",
-    contactUs:
-      "For any questions or privacy concerns, contact us at [Your Support Email].",
+    intro: [],
+    informationWeCollect: [],
+    howWeUseData: [],
+    dataSharingAndSecurity: [],
+    userControlAndChoices: [],
+    dataRetention: [],
+    childrensPrivacy: [],
+    changesToPolicy: "",
+    contactUs: "",
   });
 
   // Update content when API data is loaded
@@ -55,21 +37,32 @@ const PrivacyPolicy = ({ onBack }) => {
     if (privacyData) {
       setContent({
         intro: privacyData.intro || content.intro,
-        informationWeCollect: privacyData.informationWeCollect || content.informationWeCollect,
+        informationWeCollect:
+          privacyData.informationWeCollect || content.informationWeCollect,
         howWeUseData: privacyData.howWeUseData || content.howWeUseData,
-        dataSharingAndSecurity: privacyData.dataSharingAndSecurity || content.dataSharingAndSecurity,
-        userControlAndChoices: privacyData.userControlAndChoices || content.userControlAndChoices,
+        dataSharingAndSecurity:
+          privacyData.dataSharingAndSecurity || content.dataSharingAndSecurity,
+        userControlAndChoices:
+          privacyData.userControlAndChoices || content.userControlAndChoices,
         dataRetention: privacyData.dataRetention || content.dataRetention,
-        childrensPrivacy: privacyData.childrensPrivacy || content.childrensPrivacy,
+        childrensPrivacy:
+          privacyData.childrensPrivacy || content.childrensPrivacy,
         changesToPolicy: privacyData.changesToPolicy || content.changesToPolicy,
         contactUs: privacyData.contactUs || content.contactUs,
       });
     }
   }, [privacyData]);
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (isEditing) {
-      console.log("Saving changes:", content);
+      try {
+        await updatePrivacyPolicy({
+          content: JSON.stringify(content),
+        }).unwrap();
+        console.log("Changes saved successfully");
+      } catch (err) {
+        console.error("Failed to save changes:", err);
+      }
     }
     setIsEditing(!isEditing);
   };

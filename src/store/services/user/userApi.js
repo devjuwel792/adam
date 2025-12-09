@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const baseUrl = import.meta.env.VITE_BASE_URL;
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://10.10.13.22:8000" }),
+  baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     // GET all services for landing page
     getServices: builder.query({
@@ -28,6 +29,8 @@ export const userApi = createApi({
         method: "POST",
         body,
       }),
+
+    
     }),
   }),
 });

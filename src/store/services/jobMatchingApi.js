@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../baseQuery";
 
 export const jobMatchingApi = createApi({
   reducerPath: "jobMatchingApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://10.10.13.22:8900" }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getJobMatchingList: builder.query({
       query: () => "/dashboard/jobs/matching/list/",

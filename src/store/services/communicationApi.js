@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../baseQuery";
 
 // Communication & Reviews API slice
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -6,16 +7,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 export const communicationApi = createApi({
   reducerPath: "communicationApi",
   tagTypes: ["Communication", "InappropriateMessages"],
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers, { getState }) => {
-      let token = getState()?.auth?.token;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     // Get Report Message List
     getInappropriateMessages: builder.query({

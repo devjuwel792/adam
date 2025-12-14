@@ -8,10 +8,10 @@ import {
 } from "react-icons/fa6";
 import SelectionDropdown from "./SelectionDropdown";
 import { useApproveRejectBusinessProfileMutation } from "../../store/services/dashboardApi";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const DocumentManager = ({ isOpen, onClose,data,count }) => {
+const DocumentManager = ({ isOpen, onClose, data, count }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [documentType, setDocumentType] = useState("All Document Types");
   const [dateFilter, setDateFilter] = useState("All Dates");
@@ -20,7 +20,8 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
   const [selectedAction, setSelectedAction] = useState({}); // { docId: action }
   const [selectedStatus, setSelectedStatus] = useState("pending");
 
-  const [approveRejectBusinessProfile] = useApproveRejectBusinessProfileMutation();
+  const [approveRejectBusinessProfile] =
+    useApproveRejectBusinessProfileMutation();
 
   // Sample document data
   // const documents = [
@@ -86,16 +87,22 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter((business) =>
-        business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        business.user_full_name.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (business) =>
+          business.business_name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          business.user_full_name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
       );
     }
 
     // Document type filter (using business_type)
     if (documentType !== "All Document Types") {
-      filtered = filtered.filter((business) =>
-        business.business_type.toLowerCase() === documentType.toLowerCase()
+      filtered = filtered.filter(
+        (business) =>
+          business.business_type.toLowerCase() === documentType.toLowerCase()
       );
     }
 
@@ -117,7 +124,9 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
           daysLimit = null;
       }
       if (daysLimit) {
-        filtered = filtered.filter((business) => business.days_ago <= daysLimit);
+        filtered = filtered.filter(
+          (business) => business.days_ago <= daysLimit
+        );
       }
     }
 
@@ -132,6 +141,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
   const startIndex = (currentPage - 1) * documentsPerPage;
   const endIndex = startIndex + documentsPerPage;
   const paginatedData = filteredData.slice(startIndex, endIndex);
+  console.log("🚀 ~ DocumentManager ~ paginatedData:", paginatedData);
 
   // Generate page numbers to display
   const getPageNumbers = () => {
@@ -169,7 +179,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
 
       if (result.data) {
         console.log("Profile action successful:", result.data);
-        toast.success("Business Owner account status updated to approved.");
+        toast.success(`Profile action successful: ${action.charAt(0).toUpperCase() + action.slice(1)}`);
         // Optionally, you can update the local state or refetch data here
       } else if (result.error) {
         console.error("Profile action failed:", result.error);
@@ -240,7 +250,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
                 <option>Insurance Certificate</option>
               </select>
 
-              <select
+              {/* <select
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -249,7 +259,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
                 <option>Last 7 days</option>
                 <option>Last 30 days</option>
                 <option>Last 90 days</option>
-              </select>
+              </select> */}
             </div>
 
             <div className="w-32 hidden">
@@ -273,7 +283,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 mb-1">
-                      {business.business_name}
+                      {business.business_name} {business.id}
                     </h3>
                     <p className="text-sm text-gray-600">
                       {business.user_full_name} ({business.business_type})
@@ -304,7 +314,7 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
                   {/* Dropdown Button */}
                   <div className="flex-1">
                     <SelectionDropdown
-                      options={["approved", "deny"]}
+                      options={["approved", "reject"]}
                       selected={selectedAction[business.id]}
                       onSelect={(action) => handleAction(business.id, action)}
                     />
@@ -319,7 +329,9 @@ const DocumentManager = ({ isOpen, onClose,data,count }) => {
         <div className="p-6 border-t">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              Showing {(currentPage - 1) * documentsPerPage + 1}-{Math.min(currentPage * documentsPerPage, totalDocuments)} of {totalDocuments} documents
+              Showing {(currentPage - 1) * documentsPerPage + 1}-
+              {Math.min(currentPage * documentsPerPage, totalDocuments)} of{" "}
+              {totalDocuments} documents
             </p>
             <div className="flex items-center gap-2">
               <button

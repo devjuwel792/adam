@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../../baseQuery";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     // GET all services for landing page
     getServices: builder.query({

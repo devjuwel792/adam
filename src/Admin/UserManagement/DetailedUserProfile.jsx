@@ -234,7 +234,7 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                                 className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-[#0C1A2A]"
                               >
                                 {skill.trim()}
-                                <button
+                                {/* <button
                                   onClick={() => handleSkillRemove(skill)}
                                   className="ml-2 text-gray-700 "
                                 >
@@ -251,7 +251,7 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                                       d="M6 18L18 6M6 6l12 12"
                                     />
                                   </svg>
-                                </button>
+                                </button> */}
                               </span>
                             ))}
                           </div>

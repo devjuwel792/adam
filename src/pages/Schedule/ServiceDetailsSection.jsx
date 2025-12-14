@@ -166,22 +166,14 @@ export function ServiceDetailsSection({ formData, onInputChange, services, isLoa
               >
                 Hospital
               </label>
-              <select
+              <input
                 id="hospital"
+                type="text"
+                placeholder={isLoading ? "Loading..." : "Hospital will be selected after choosing test package"}
                 value={formData.hospital}
-                onChange={(e) => onInputChange("hospital", e.target.value)} // Manual selection is still possible
-                className="w-full border border-gray-300 rounded-md p-2"
-                disabled={isLoading}
-              >
-                <option value="">
-                  {isLoading ? "Loading hospitals..." : "Select Hospital"}
-                </option>
-                {hospitals.map((hospitalName) => (
-                  <option key={hospitalName} value={hospitalName}>
-                    {hospitalName}
-                  </option>
-                ))}
-              </select>
+                readOnly
+                className="w-full border border-gray-300 rounded-md p-2 bg-gray-100 cursor-not-allowed placeholder:text-sm"
+              />
             </div>
 
             <div>
@@ -196,7 +188,7 @@ export function ServiceDetailsSection({ formData, onInputChange, services, isLoa
                 placeholder="Your Street address"
                 value={formData.location}
                 onChange={(e) => onInputChange("location", e.target.value)}
-                className="w-full border border-gray-300 rounded-md p-2"
+                className="w-full border border-gray-300 rounded-md p-2 placeholder:text-sm"
               />
             </div>
           </div>

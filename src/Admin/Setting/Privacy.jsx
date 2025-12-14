@@ -14,8 +14,9 @@ const PrivacyPolicy = ({ onBack }) => {
     error: privacyError,
     isLoading: privacyLoading,
   } = useGetPrivacyPolicyQuery();
+    console.log("🚀 ~ PrivacyPolicy ~ data:", data)
 
-  const privacyData = data ? JSON.parse(data.content) : null;
+  const privacyData = data?.content ? JSON.parse(data.content || "") : "";
   const [
     updatePrivacyPolicy,
     { isLoading: updateLoading, error: updateError },

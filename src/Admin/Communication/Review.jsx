@@ -1,77 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { useGetInappropriateMessagesQuery } from "../../store/services/communicationApi";
 import ContentReviewDetails from "./ContentReviewDetails";
 
 const Review = ({onPageShow}) => {
   const [contentType, setContentType] = useState("All Types");
   const [reportReason, setReportReason] = useState("All Reasons");
-  const [activeTab, setActiveTab] = useState("content");
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedReportId, setSelectedReportId] = useState(null);
 
-  const openDetailsModal = () => {
-    setIsDetailsOpen(true);
+  const {
+    data: inappropriateMessages,
+    isLoading,
+    isError,
+  } = useGetInappropriateMessagesQuery();
+
+  const openDetailsModal = (id) => {
+    setSelectedReportId(id);
   };
-
-  const contentItems = [
-    {
-      id: 1,
-      type: "Message",
-      reason: "Inappropriate Language",
-      title: "Message from Arif Hassan to Joti Das",
-      preview: "This is completely unacceptable behavior and...",
-      timestamp: "2 hours ago",
-      reasonColor: "bg-orange-100 text-orange-800",
-      typeColor: "bg-blue-100 text-blue-800",
-    },
-    {
-      id: 2,
-      type: "Review",
-      reason: "Spam",
-      title: "Review by Nilutpal",
-      preview: "Check out my website for amazing deals...",
-      timestamp: "4 hours ago",
-      reasonColor: "bg-purple-100 text-purple-800",
-      typeColor: "bg-gray-100 text-gray-800",
-    },
-    {
-      id: 3,
-      type: "Message",
-      reason: "Harassment",
-      title: "Message from Joti Das to Nilutpal",
-      preview: "You better respond to my messages or else...",
-      timestamp: "1 hour ago",
-      reasonColor: "bg-red-100 text-red-800",
-      typeColor: "bg-blue-100 text-blue-800",
-    },
-  ];
-
-  const messages = [
-    {
-      id: 1,
-      type: "Direct Message",
-      reason: "Spam",
-      title: "Message from John Smith",
-      preview: "Hey, check out this amazing offer...",
-      timestamp: "30 minutes ago",
-      reasonColor: "bg-purple-100 text-purple-800",
-      typeColor: "bg-green-100 text-green-800",
-    },
-    {
-      id: 2,
-      type: "Group Message",
-      reason: "Inappropriate Content",
-      title: "Message in Healthcare Group",
-      preview: "This content violates our community guidelines...",
-      timestamp: "1 hour ago",
-      reasonColor: "bg-orange-100 text-orange-800",
-      typeColor: "bg-indigo-100 text-indigo-800",
-    },
-  ];
-
-  const currentItems = activeTab === "content" ? contentItems : messages;
-  const contentCount = contentItems.length;
-  const messageCount = messages.length;
 
   return (
     <div>
@@ -132,13 +78,7 @@ const Review = ({onPageShow}) => {
       {/* Tabs */}
       <div className="flex  mt-6 mb-6">
         <button
-          onClick={() => setActiveTab("content")}
           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors border-[#C9A14A] text-[#C9A14A]
-             ${ ""
-            // activeTab === "content"
-            //   ? "border-[#C9A14A] text-[#C9A14A]"
-            //   : "border-transparent text-gray-500 hover:text-gray-700"
-          }
           `}
         >
           Content 
@@ -146,10 +86,7 @@ const Review = ({onPageShow}) => {
         <button
           onClick={() => onPageShow()}
           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ml-6 ${
-            ""
-            // activeTab === "messages"
-            //   ? "border-[#C9A14A] text-[#C9A14A]"
-            //   : "border-transparent text-gray-500 hover:text-gray-700"
+            "border-transparent text-gray-500 hover:text-gray-700"
           }`}
         >
           Messages 
@@ -158,58 +95,63 @@ const Review = ({onPageShow}) => {
 
       {/* Content List */}
       <div className="border mb-6 divide-y-2 max-w-[800px] rounded-md">
-        {currentItems.map((item) => (
-          <div
-            onClick={openDetailsModal}
-            key={item.id}
-            className="flex items-center justify-between p-4   transition-colors cursor-pointer"
-          >
-            <div className="flex-1">
-              {/* Tags */}
-              <div className="flex gap-2 ">
-                <span
-                  className={`px-2 py-1 rounded-md text-xs font-medium ${item.reasonColor}`}
-                >
-                  {item.reason}
-                </span>
-                <span className={`px-2 py-1 text-xs font-medium text-gray-400`}>
-                  {item.type}
-                </span>
+        {isLoading && <div className="p-4 text-center">Loading content...</div>}
+        {isError && (
+          <div className="p-4 text-center text-red-500">
+            Failed to load content.
+          </div>
+        )}
+        {!isLoading &&
+          !isError &&
+          inappropriateMessages?.map((item) => (
+            <div
+              onClick={() => openDetailsModal(item.id)}
+              key={item.id}
+              className="flex items-center justify-between p-4 transition-colors cursor-pointer"
+            >
+              <div className="flex-1">
+                {/* Tags */}
+                <div className="flex gap-2 mb-2">
+                  <span
+                    className={`px-2 py-1 rounded-md text-xs font-medium bg-orange-100 text-orange-800`}
+                  >
+                    {item.reason}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="font-medium text-gray-900 mb-1">{item.title}</h3>
+
+                {/* Preview */}
+                <p className="text-sm text-gray-600 mb-2">{item.info}</p>
+
+                {/* Timestamp */}
+                <p className="text-xs text-gray-500">{item.time}</p>
               </div>
 
-              {/* Title */}
-              <h3 className="font-medium text-gray-900 mb-1">{item.title}</h3>
-
-              {/* Preview */}
-              <p className="text-sm text-gray-600 mb-2">{item.preview}</p>
-
-              {/* Timestamp */}
-              <p className="text-xs text-gray-500">{item.timestamp}</p>
+              {/* Arrow */}
+              <div className="ml-4 self-start">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
             </div>
-
-            {/* Arrow */}
-            <div className="ml-4 self-start">
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
       <ContentReviewDetails
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
-        contentItem={true}
+        isOpen={!!selectedReportId}
+        onClose={() => setSelectedReportId(null)}
+        reportId={selectedReportId}
       />
     </div>
   );

@@ -11,12 +11,13 @@ const AvailablePhlebotomists = ({ isOpen, onClose, job }) => {
   const [openJobMatchingDetails, setOpenJobMatchingDetails] = useState(false);
   const [showCount, setShowCount] = useState(3);
   const [selectedPhlebotomist, setSelectedPhlebotomist] = useState(null);
+  console.log("🚀 ~ AvailablePhlebotomists ~ selectedPhlebotomist:", selectedPhlebotomist)
 
   const { data, isLoading, isError } = useGetAvailablePhlebotomistsQuery();
 
   const phlebotomists =
     data?.list?.map((item) => ({
-      id: item.id,
+      id: item.phlebotomist_id,
       name: item.full_name,
       rating: 0,
       reviews: 0,

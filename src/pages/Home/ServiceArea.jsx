@@ -58,70 +58,76 @@ export const ServiceArea = () => {
     navigate("/schedule");
   };
   return (
-    <div className="w-full">
-      <section className="py-16">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold text-gray-900">Service Areas</h2>
-          <p className="text-xl text-gray-900 pt-2 max-w-3xl mx-auto">
-            We provide home blood testing services across major cities. Check if
-            we <br /> serve your area.
+    <div className="w-full overflow-hidden"> {/* Add overflow-hidden for safety */}
+      {/* Service Areas Section */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Service Areas</h2>
+          <p className="text-lg sm:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
+            We provide home blood testing services across major cities. Check if we serve your area.
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto my-14">
-          {services.map((s, idx) => (
-            <div
-              key={idx}
-              className="bg-gradient-to-r from-[#FAF6ED] to-[#FAF6ED] rounded-xl shadow py-6 px-8 flex flex-col items-center text-center"
-            >
-              {s.icon}
-              <h3 className="mt-3 font-semibold">{s.city}</h3>
-              <p className="text-gray-600 text-sm mt-1">{s.areas}</p>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-base text-[#2c2c2c]">
-            Don’t see your city? We’re expanding rapidly!
-          </p>
-          <button className="mt-3 border border-[#C9A14A] text-[#C9A14A] px-5 py-2 rounded-md hover:bg-yellow-50 transition">
-            Request Service in Your Area
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto my-12 md:my-16">
+            {services.map((s, idx) => (
+              <div
+                key={idx}
+                className="bg-gradient-to-r from-[#FAF6ED] to-[#FAF6ED] rounded-xl shadow-md p-6 flex flex-col items-center text-center"
+              >
+                {s.icon}
+                <h3 className="mt-3 font-semibold text-lg">{s.city}</h3>
+                <p className="text-gray-600 text-sm mt-1">{s.areas}</p>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <p className="text-base text-[#2c2c2c]">
+              Don’t see your city? We’re expanding rapidly!
+            </p>
+            <button className="mt-3 border border-[#C9A14A] text-[#C9A14A] px-5 py-2 rounded-md hover:bg-yellow-50 transition">
+              Request Service in Your Area
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Ready to Get Started */}
-      <section className="bg-[#EFE3C9] py-24 px-36 mx-32 mb-32 text-center flex flex-col justify-center items-center gap-3">
-        <h3 className="text-4xl font-bold text-[#2c2c2c]">
-          Ready to Get Started?
-        </h3>
-        <p className="text-[#6B6B6B] text-xl max-w-3xl mx-auto mb-5">
-          Book your home blood test appointment today and experience the
-          convenience of professional healthcare at your doorstep.
-        </p>
-        <button className="flex items-center justify-center gap-2 bg-white border border-[#E5E7EB] text-[#C9A14A] px-6 py-3 rounded-lg shadow transition">
-          <img src={book} alt="" />
-          <p onClick={handleBook} className="text-lg font-semibold">Book an Appointment Now</p>
-        </button>
+      <section className="py-16 md:py-20 lg:py-24">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#EFE3C9] rounded-2xl p-8 sm:p-12 md:p-16 text-center flex flex-col justify-center items-center gap-4">
+            <h3 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c]">
+              Ready to Get Started?
+            </h3>
+            <p className="text-lg sm:text-xl text-[#6B6B6B] max-w-3xl mx-auto mb-4">
+              Book your home blood test appointment today and experience the
+              convenience of professional healthcare at your doorstep.
+            </p>
+            <button
+              onClick={handleBook}
+              className="flex items-center justify-center gap-2 bg-white border border-[#E5E7EB] text-[#C9A14A] px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition font-semibold text-lg"
+            >
+              <img src={book} alt="Calendar icon" />
+              <span>Book an Appointment Now</span>
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Customer Reviews */}
-      <section className="py-12 bg-[#FAF8F2] border border-[#E5E7EB]">
-        <h3 className="text-3xl font-medium text-[#2c2c2c] mt-2 mb-8 text-center">
-          What Our Customers Say
-        </h3>
-        <div className="max-w-5xl mx-auto">
+      <section className="py-16 md:py-20 bg-[#FAF8F2] border-t border-[#E5E7EB]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h3 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-8 md:mb-12 text-center">
+            What Our Customers Say
+          </h3>
           <button
             onClick={() => setOpen(true)}
-            className="text-[#CBA135] text-base font-semibold underline mb-3"
+            className="text-[#CBA135] text-base font-semibold underline mb-4 block mx-auto md:mx-0"
           >
             Write a Review
           </button>
           {/* Modal */}
-          {/* Modal */}
           {open && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-[#F5F5F5] rounded-xl p-6 w-[400px] shadow-lg relative">
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-[#F5F5F5] rounded-xl p-6 w-full max-w-md shadow-lg relative">
                 {/* Header */}
                 <div className="flex items-center space-x-2 mb-4">
                   <Star className="text-yellow-500 w-4 h-4 fill-yellow-500" />
@@ -169,7 +175,7 @@ export const ServiceArea = () => {
           )}
 
           {/* Reviews */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {reviews.map((r, idx) => (
               <div
                 key={idx}
@@ -178,10 +184,10 @@ export const ServiceArea = () => {
                 <h4 className="text-base">{r.name}</h4>
                 <div className="flex items-center space-x-1 my-2 text-yellow-500">
                   {Array(r.rating)
-                    .fill("⭐")
-                    .map((star, i) => (
-                      <span key={i}>{star}</span>
-                    ))}
+                    .fill(0)
+                    .map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-current" />
+                    )) }
                 </div>
                 <p className="text-[#4B5563] text-sm">{r.text}</p>
               </div>

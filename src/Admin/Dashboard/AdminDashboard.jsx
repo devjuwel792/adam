@@ -1,38 +1,31 @@
+import {
+  useGetDashboardDataQuery,
+  useGetPendingBusinessOwnersQuery,
+  useGetPendingPhlebotomistsQuery,
+} from "@/store/services/dashboardApi";
 import { useEffect, useState } from "react";
+import { FaUsers } from "react-icons/fa";
+import { FaBriefcase, FaClock, FaDollarSign } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../store/authSlice";
-import { Sidebar } from "./Sidebar";
-import UserManagement from "../UserManagement/UserManagement";
-import Header from "./Header";
-import { StatCard } from "./StatCard";
-import { Users, Clock, Briefcase, DollarSign, Factory } from "lucide-react";
-import { ActionCard } from "./ActionCard";
-import QuickStats, { ActivityCard } from "./QuickStats";
+import { ToastContainer } from "react-toastify";
 import DashboardImage from "../../assets/images/dashboardImage.png";
-import { FaUsers } from "react-icons/fa";
-import { FaClock } from "react-icons/fa6";
-import { FaBriefcase } from "react-icons/fa6";
-import { FaDollarSign } from "react-icons/fa6";
-import ProfessionalList from "./ProfessionalList";
-import ProfileModal from "./ProfileModal";
-import DocumentManager from "./DocumentManager";
-import NotificationsPanel from "./NotificationsPanel";
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import { logout } from "../../store/authSlice";
+import AnalyticsDashboard from "../AnalyticsDashboard/AnalyticsDashboard";
+import Communication from "../Communication/Communication";
 import DisputeManagement from "../DisputeManagement/DisputeManagement";
 import JobManagement from "../JobManagement/JobManagement";
 import JobMatching from "../JobMatching/JobMatching";
-import Communication from "../Communication/Communication";
-import MessagingInterface from "../Communication/MessagingInterface";
 import PayrollManagement from "../PayrollManagement/PayrollManagement";
 import Setting from "../Setting/Setting";
-import AnalyticsDashboard from "../AnalyticsDashboard/AnalyticsDashboard";
-import {
-  useGetDashboardDataQuery,
-  useGetPendingPhlebotomistsQuery,
-  useGetPendingBusinessOwnersQuery,
-} from "@/store/services/dashboardApi";
-import { ToastContainer } from "react-toastify";
+import UserManagement from "../UserManagement/UserManagement";
+import { ActionCard } from "./ActionCard";
+import Header from "./Header";
+import QuickStats, { ActivityCard } from "./QuickStats";
+import { Sidebar } from "./Sidebar";
+import { StatCard } from "./StatCard";
+import PatientManagement from "../UserManagement/PatientManagement";
+
 
 export default function AdminDashboard() {
   const dispatch = useDispatch();
@@ -48,7 +41,7 @@ export default function AdminDashboard() {
   const { data: pendingPhlebotomistsData } = useGetPendingPhlebotomistsQuery();
   const { data: pendingBusinessOwnersData } =
     useGetPendingBusinessOwnersQuery();
-
+  console.log("🚀 ~ AdminDashboard ~ pendingBusinessOwnersData:", pendingBusinessOwnersData)
 
   const handleComponentChange = (component) => {
     if (component === "Logout") {
@@ -99,6 +92,8 @@ export default function AdminDashboard() {
                   ? "Welcome back, Admin Fariha"
                   : currentComponent === "User Management"
                   ? "User Management"
+                  : currentComponent === "Patient Management"
+                  ? "Patient Management"
                   : currentComponent === "Job Management"
                   ? "Job Management"
                   : currentComponent === "Dispute Management"
@@ -120,6 +115,10 @@ export default function AdminDashboard() {
                   ? "Here's what's happening with Phlebotomist today"
                   : currentComponent === "User Management"
                   ? "Manage all registered users on the platform"
+                  : currentComponent === "Patient Management"
+                  ? "Manage all registered patients on the platform"
+                  : currentComponent === "Client Management"
+                  ? "Manage all registered clients on the platform"
                   : currentComponent === "Job Management"
                   ? "Review and manage job postings on the platform"
                   : currentComponent === "Dispute Management"
@@ -263,6 +262,7 @@ export default function AdminDashboard() {
             </div>
           )}
           {currentComponent === "User Management" && <UserManagement />}
+          {currentComponent === "Patient Management" && <PatientManagement />}
           {currentComponent === "Job Management" && (
             <JobManagement
               onMessage={() => {

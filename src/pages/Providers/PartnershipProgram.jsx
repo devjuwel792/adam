@@ -24,7 +24,7 @@ const PartnershipProgram = () => {
         "Reduce overhead costs and optimize resource allocation while expanding your service reach to more patients.",
     },
     {
-      icon: <Clock color="#FF6B35" />,
+      icon: <Clock className="w-6 h-6 text-[#FF6B35]" />,
       title: "Flexibility",
       description:
         "Scale services up or down based on demand with flexible scheduling and staffing solutions.",
@@ -72,16 +72,16 @@ const PartnershipProgram = () => {
   ];
 
   return (
-    <div className="min-h-screen py-16 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen py-12 md:py-16 lg:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Partnership Program Benefits Section */}
-        <div className="mb-20">
+        <div className="mb-16 md:mb-20 lg:mb-24">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-[#2c2c2c] mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-4">
               Partnership Program Benefits
             </h2>
-            <p className="text-[#4B5563] text-xl">
+            <p className="text-lg sm:text-xl text-[#4B5563]">
               Join our network and unlock new opportunities for your healthcare
               practice
             </p>
@@ -100,7 +100,7 @@ const PartnershipProgram = () => {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-semibold text-[#2c2c2c] mb-3">
+                <h3 className="text-xl sm:text-2xl font-semibold text-[#2c2c2c] mb-3">
                   {benefit.title}
                 </h3>
 
@@ -116,11 +116,11 @@ const PartnershipProgram = () => {
         {/* Partnership Service Models Section */}
         <div>
           {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-[#2c2c2c] mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-4">
               Partnership Service Models
             </h2>
-            <p className="text-[#4B5563] text-xl">
+            <p className="text-lg sm:text-xl text-[#4B5563]">
               Choose the model that best fits your organization's needs
             </p>
           </div>
@@ -130,9 +130,9 @@ const PartnershipProgram = () => {
             {serviceModels.map((model, index) => (
               <div
                 key={index}
-                className={`relative bg-white rounded-lg shadow-sm p-6 ${
+                className={`relative bg-white rounded-lg shadow-sm p-6 flex flex-col ${
                   model.isPopular
-                    ? "border-2 border-[#C9A14A] ring-2 ring-[#C9A14A] ring-opacity-20"
+                    ? "border-2 border-[#C9A14A] transform md:scale-105"
                     : "border border-gray-200"
                 }`}
               >
@@ -158,7 +158,7 @@ const PartnershipProgram = () => {
                 </h3>
 
                 {/* Features */}
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 mb-8 flex-grow">
                   {model.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
@@ -172,7 +172,7 @@ const PartnershipProgram = () => {
 
                 {/* Button */}
                 <button
-                  className={`w-full font-semibold py-3 px-4 rounded-lg transition-colors duration-200 ${model.buttonStyle}`}
+                  className={`w-full font-semibold py-3 px-4 rounded-lg transition-colors duration-200 mt-auto ${model.buttonStyle}`}
                 >
                   {model.buttonText}
                 </button>

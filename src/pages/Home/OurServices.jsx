@@ -76,41 +76,44 @@ const services = [
 
 export const OurServices = () => {
   return (
-    <section className="py-16 mb-24">
-      <div className="text-center">
-        <h2 className="text-4xl font-bold text-gray-900">Our Services</h2>
-        <p className="text-xl text-gray-900 pt-2 max-w-3xl mx-auto">
-          Comprehensive blood testing services available at your home with{" "}
-          <br />
+    <section className="py-16 md:py-20 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+            Our Services
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-700 mt-4 max-w-3xl mx-auto">
+            Comprehensive blood testing services available at your home with
           professional care and accurate results.
-        </p>
-      </div>
+          </p>
+        </div>
 
-      {/* Cards Section */}
-      <div className="py-14 grid grid-cols-2 gap-10 max-w-7xl mx-auto">
-        {services.map((service, idx) => (
-          <div
-            key={idx}
-            className="flex justify-between border-x border-t border-b-8 border-[#2c2c2c] drop-shadow-md rounded-[45px] p-14 h-[308px]"
-            style={{ background: service.bg }}
-          >
-            <div className="flex flex-col justify-between">
-              <p
-                className="font-medium text-3xl"
-                style={{ color: service.textColor }}
-              >
-                {service.title}
-              </p>
-              <div className="flex items-center gap-4">
-                <img src={service.icon} alt="" />
-                <p className="text-xl" style={{ color: service.learnColor }}>
-                  Learn more
+        {/* Cards Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+          {services.map((service, idx) => (
+            <div
+              key={idx}
+              className="flex flex-col sm:flex-row justify-between items-center border-x border-t border-b-8 border-[#2c2c2c] shadow-lg rounded-[45px] p-6 sm:p-8 md:p-10"
+              style={{ background: service.bg }}
+            >
+              <div className="flex flex-col justify-between h-full w-full text-center sm:text-left">
+                <p
+                  className="font-medium text-2xl md:text-3xl mb-8 sm:mb-0"
+                  style={{ color: service.textColor }}
+                >
+                  {service.title}
                 </p>
+                <div className="flex items-center gap-4 justify-center sm:justify-start mt-auto">
+                  <img src={service.icon} alt="learn more icon" className="w-8 h-8" />
+                  <p className="text-lg md:text-xl" style={{ color: service.learnColor }}>
+                    Learn more
+                  </p>
+                </div>
               </div>
+              <img src={service.cardImg} alt={`${service.title} illustration`} className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 object-contain mt-6 sm:mt-0 sm:ml-4" />
             </div>
-            <img src={service.cardImg} alt="" />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

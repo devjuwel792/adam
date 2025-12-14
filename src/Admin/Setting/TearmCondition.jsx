@@ -1,44 +1,59 @@
 import { useState, useEffect } from "react";
 import PrivacyPolicy from "./Privacy";
 import RichTextEditor from "./RichTextEditor";
-import { useGetTermsAndConditionsQuery } from "../../store/services/settingApi";
-
+import {
+  useGetTermsAndConditionsQuery,
+  useUpdateTermsAndConditionsMutation,
+} from "../../store/services/settingApi";
 
 const TermsAndConditions = () => {
   const [currentView, setCurrentView] = useState("terms"); // 'terms' or 'privacy'
   const [isEditing, setIsEditing] = useState(false);
-  const { data: termsData, error: termsError, isLoading: termsLoading } = useGetTermsAndConditionsQuery();
+  const {
+    data,
+    error: termsError,
+    isLoading: termsLoading,
+  } = useGetTermsAndConditionsQuery();
+
+  const termsData = data?.content ? JSON.parse(data.content || "") : "";
+  console.log("🚀 ~ TermsAndConditions ~ termsData:", termsData)
+
+  const [
+    updateTermsAndConditions,
+    { isLoading: updateLoading, error: updateError },
+  ] = useUpdateTermsAndConditionsMutation();
   const [content, setContent] = useState({
-    termsOfService:
-      "By using Phlebotomist services, you agree to provide accurate healthcare services in accordance with professional standards and applicable regulations. This agreement establishes the framework for our partnership.",
-    keyPoints: [
-      "Professional liability coverage required",
-      "Compliance with HIPAA regulations",
-      "24-hour cancellation policy",
-    ],
-    paymentPolicies:
-      "Payment terms are Net 15 days from service completion. Direct deposit is our preferred payment method, with payments processed bi-weekly.",
-    processingTime: "2-3 business days",
-    legalDisclaimers:
-      "This agreement is governed by state healthcare regulations. Both parties acknowledge understanding of their rights and responsibilities under this partnership.",
+    termsOfService: "",
+    keyPoints: [],
+    paymentPolicies: "",
+    processingTime: "",
+    legalDisclaimers: "",
   });
 
   // Update content when API data is loaded
-  useState(() => {
+  useEffect(() => {
     if (termsData) {
       setContent({
         termsOfService: termsData.termsOfService || content.termsOfService,
         keyPoints: termsData.keyPoints || content.keyPoints,
         paymentPolicies: termsData.paymentPolicies || content.paymentPolicies,
         processingTime: termsData.processingTime || content.processingTime,
-        legalDisclaimers: termsData.legalDisclaimers || content.legalDisclaimers,
+        legalDisclaimers:
+          termsData.legalDisclaimers || content.legalDisclaimers,
       });
     }
   }, [termsData]);
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (isEditing) {
-      console.log("Saving changes:", content);
+      try {
+        await updateTermsAndConditions({
+          content: JSON.stringify(content),
+        }).unwrap();
+        console.log("Changes saved successfully");
+      } catch (err) {
+        console.error("Failed to save changes:", err);
+      }
     }
     setIsEditing(!isEditing);
   };

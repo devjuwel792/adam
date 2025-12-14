@@ -11,6 +11,7 @@ import AdminDashboard from "../Admin/Dashboard/AdminDashboard";
 import MessagingInterface from "@/Admin/Communication/MessagingInterface";
 import LoginPage from "../Admin/Login/index";
 import ProtectedRoute from "../components/ProtectedRoute";
+import { PaymentSuccess } from "@/pages/Schedule/PaymentSuccess";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/schedule",
         element: <Schedule />,
+      },
+      {
+        path: "/payment-success",
+        element: <PaymentSuccess />,
       },
     ],
   },

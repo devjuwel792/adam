@@ -37,6 +37,16 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
   });
   const [updateJobStatus] = useUpdateJobStatusMutation();
 
+  // Function to format time from 24hr to 12hr
+  const formatTime = (timeString) => {
+    if (!timeString) return "";
+    const [hours, minutes] = timeString.split(":");
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minutes} ${ampm}`;
+  };
+
   const handleDecision = async (status) => {
     try {
       await updateJobStatus({ id: job?.id, active_status: status }).unwrap();
@@ -157,7 +167,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
           <div className="flex-1">
             <div className="border p-4 rounded-md shadow-sm">
               <h2 className="text-2xl font-semibold mb-3 text-gray-900">
-                Blood Draw Station
+               {jobDetail?.title}
               </h2>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                 <span>Job ID: #JOB-{jobDetail?.id}</span>
@@ -201,11 +211,7 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
                   Job Description
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  A phlebotomist is responsible for the collection of blood
-                  samples from patients for diagnostic testing, blood donations,
-                  or medical procedures. This role is critical in ensuring the
-                  proper handling, labeling, and delivery of blood samples to
-                  the laboratory for analysis.
+                  {jobDetail?.job_info}
                 </p>
               </div>
 
@@ -217,23 +223,23 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Salary Range</p>
-                    <p className="font-medium text-gray-900">$30</p>
-                    <p className="text-xs text-gray-500">Per Hour</p>
+                    <p className="font-medium text-gray-900">${jobDetail?.pay_rate}</p>
+                    <p className="text-xs text-gray-500">Per {jobDetail?.pay_type}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">
                       Contract Duration
                     </p>
-                    <p className="font-medium text-gray-900">1day</p>
-                    <p className="text-xs text-gray-500">Full-time position</p>
+                    <p className="font-medium text-gray-900">1 Day</p>
+                    <p className="text-xs text-gray-500">{jobDetail?.job_types.replace('_', ' ')} position</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Start Date</p>
-                    <p className="font-medium text-gray-900">Aug 15, 2025</p>
+                    <p className="font-medium text-gray-900">{new Date(jobDetail?.date).toLocaleDateString()}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Work Schedule</p>
-                    <p className="font-medium text-gray-900">08 hrs</p>
+                    <p className="font-medium text-gray-900">{jobDetail?.total_working_hour.split(':')[0]} hrs</p>
                   </div>
                 </div>
               </div>
@@ -317,11 +323,11 @@ const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-2">
                     <FaLocationDot className="w-4 h-4 text-teal-500" />
-                    <span className="text-gray-700">XYZ XYZ XYZ</span>
+                    <span className="text-gray-700">{jobDetail?.location}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <FaClock className="w-4 h-4 text-teal-500" />
-                    <span className="text-gray-700">10:00 am to 12:00 pm</span>
+                    <span className="text-gray-700">{formatTime(jobDetail?.start_time)} to {formatTime(jobDetail?.end_time)}</span>
                   </div>
                 </div>
               </div>

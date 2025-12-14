@@ -13,7 +13,7 @@ const HealthcareServices = () => {
   const services = [
     {
       id: 1,
-      icon: <img src={tube} alt="" />,
+      icon: <img src={tube} alt="Test tube icon" />,
       title: "Mobile Blood Draws & Testing",
       description:
         "Professional blood collection and specimen testing in the comfort of your home",
@@ -27,7 +27,7 @@ const HealthcareServices = () => {
     },
     {
       id: 2,
-      icon: <img src={dr} alt="" />,
+      icon: <img src={dr} alt="Healthcare user icon" />,
       title: "Home Health Assessments",
       description:
         "Comprehensive health evaluations performed by licensed healthcare professionals",
@@ -55,7 +55,7 @@ const HealthcareServices = () => {
     },
     {
       id: 4,
-      icon: <img src={tube} alt="" />,
+      icon: <img src={tube} alt="Test tube icon" />,
       title: "Mobile Blood Draws & Testing",
       description:
         "Professional blood collection and specimen testing in the comfort of your home",
@@ -69,7 +69,7 @@ const HealthcareServices = () => {
     },
     {
       id: 5,
-      icon: <img src={dr} alt="" />,
+      icon: <img src={dr} alt="Healthcare user icon" />,
       title: "Home Health Assessments",
       description:
         "Comprehensive health evaluations performed by licensed healthcare professionals",
@@ -98,14 +98,14 @@ const HealthcareServices = () => {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen py-16 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="bg-gray-50 min-h-screen py-12 md:py-16 lg:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-[#2c2c2c] mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-4">
             Detailed Service Offerings
           </h1>
-          <p className="text-[#4B5563] text-xl">
+          <p className="text-lg sm:text-xl text-[#4B5563]">
             Comprehensive healthcare services delivered directly to your
             location
           </p>
@@ -116,10 +116,10 @@ const HealthcareServices = () => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 flex flex-col"
             >
               {/* Icon */}
-              <div className="w-12 h-12 bg-[#C9A14A] rounded-full flex items-center justify-center text-white mb-6">
+              <div className="w-12 h-12 bg-[#C9A14A] rounded-full flex items-center justify-center text-white mb-4">
                 {service.icon}
               </div>
 
@@ -135,7 +135,7 @@ const HealthcareServices = () => {
 
               {/* Price */}
               <div className="mb-6">
-                <span className="text-3xl font-bold text-[#C9A14A]">
+                <span className="text-2xl sm:text-3xl font-bold text-[#C9A14A]">
                   {service.price}
                 </span>
                 <span className="text-gray-500 ml-2 text-sm">
@@ -144,7 +144,7 @@ const HealthcareServices = () => {
               </div>
 
               {/* Features */}
-              <div className="mb-8">
+              <div className="mb-8 flex-grow">
                 <h4 className="text-sm font-semibold text-gray-900 mb-3">
                   What's Included:
                 </h4>
@@ -162,7 +162,7 @@ const HealthcareServices = () => {
               </div>
 
               {/* Button */}
-              <button onClick={handleBook} className="w-full bg-[#C9A14A] text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
+              <button onClick={handleBook} className="w-full bg-[#C9A14A] hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 mt-auto">
                 Book Now
               </button>
             </div>

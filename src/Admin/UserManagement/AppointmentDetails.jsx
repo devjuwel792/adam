@@ -3,8 +3,33 @@ import { HiDocumentPlus } from "react-icons/hi2";
 import { PiTestTubeFill } from "react-icons/pi";
 import { FaStar, FaUsers } from "react-icons/fa";
 import AvatarImage from "../../assets/images/Image-52.png";
-const AppointmentDetails = ({ isOpen, onClose, appointment }) => {
+import { useGetAppointmentDetailsQuery } from "../../store/services/patientManagementApi";
+
+const AppointmentDetails = ({ isOpen, onClose, appointmentId }) => {
+  const { data: appointmentData, isLoading, error } = useGetAppointmentDetailsQuery(appointmentId, { skip: !appointmentId });
+
   if (!isOpen) return null;
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+          <p className="text-center">Loading appointment details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+          <p className="text-center text-red-500">Error loading appointment details: {error.message}</p>
+          <button onClick={onClose} className="mt-4 px-4 py-2 bg-gray-500 text-white rounded">Close</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -31,29 +56,29 @@ const AppointmentDetails = ({ isOpen, onClose, appointment }) => {
               <div>
                 <div className="flex items-center space-x-3 mb-2">
                   <span className="text-black font-semibold">Name:</span>
-                  <div className="font-medium ">Fahmida</div>
+                  <div className="font-medium ">{appointmentData?.patient_full_name || 'N/A'}</div>
                 </div>
                 <div className="flex items-center space-x-3 mb-2">
                   <span className="font-semibold">ID:</span>
-                  <div className="font-medium">302-2025-001</div>
+                  <div className="font-medium">{appointmentId || 'N/A'}</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-gray-600">Phone:</span>
-                  <div className="font-medium ">+1 555-0123</div>
+                  <div className="font-medium">{appointmentData?.patient_contact || 'N/A'}</div>
                 </div>
                 <div>
                   <span className="text-gray-600">Time:</span>
-                  <div className="font-medium">10:30 AM</div>
+                  <div className="font-medium">{appointmentData?.request_time || 'N/A'}</div>
                 </div>
                 <div>
                   <span className="text-gray-600">Age:</span>
-                  <div className="font-medium">34 years</div>
+                  <div className="font-medium">{appointmentData?.patient_age || 'N/A'}</div>
                 </div>
                 <div>
                   <span className="text-gray-600">Date:</span>
-                  <div className="font-medium">Dec 15, 2024</div>
+                  <div className="font-medium">{appointmentData?.request_date || 'N/A'}</div>
                 </div>
               </div>
             </div>
@@ -63,29 +88,35 @@ const AppointmentDetails = ({ isOpen, onClose, appointment }) => {
               <h3 className="text-lg font-semibold text-gray-800 mb-4">
                 Medical Information
               </h3>
-              <div className="bg-blue-50 border-blue-100 p-4 rounded-lg mb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div>
-                      <div className="font-medium text-blue-800 flex items-center gap-2 ">
-                        <HiDocumentPlus /> Prescription.pdf
-                      </div>
-                      <div className="text-xs text-blue-500">
-                        Uploaded 2 hours ago
+              {appointmentData?.prescription ? (
+                <div className="bg-blue-50 border-blue-100 p-4 rounded-lg mb-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div>
+                        <div className="font-medium text-blue-800 flex items-center gap-2 ">
+                          <HiDocumentPlus /> {appointmentData.prescription}
+                        </div>
+                        <div className="text-xs text-blue-500">
+                          Uploaded recently
+                        </div>
                       </div>
                     </div>
+                    <button className="px-4 py-2  text-blue-600 rounded-lg text-sm ">
+                      View
+                    </button>
                   </div>
-                  <button className="px-4 py-2  text-blue-600 rounded-lg text-sm ">
-                    View
-                  </button>
                 </div>
-              </div>
+              ) : (
+                <div className="bg-gray-50 border-gray-100 p-4 rounded-lg mb-4">
+                  <div className="text-sm text-gray-600">No prescription available</div>
+                </div>
+              )}
               <div className=" p-4 rounded-lg">
                 <div className="text-sm text-gray-600 mb-1">
                   Special Instructions
                 </div>
                 <div className="text-sm text-gray-800">
-                  Patient requires fasting blood work. Last meal 12 hours ago
+                  {appointmentData?.special_instruction || 'No special instructions provided'}
                 </div>
               </div>
             </div>
@@ -134,7 +165,7 @@ const AppointmentDetails = ({ isOpen, onClose, appointment }) => {
                   </div>
                   <div className="flex-1">
                     <p className="font-semibold text-[#003366]">
-                      Community Health Center
+                      {appointmentData?.client_name || 'Community Health Center'}
                     </p>
                     <div className="text-sm text-gray-600">Healthcare</div>
                   </div>
@@ -177,7 +208,7 @@ const AppointmentDetails = ({ isOpen, onClose, appointment }) => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-gray-800">
-                    Blood Test Panel
+                    {appointmentData?.service_name || 'N/A'}
                   </span>
                   <button className="text-[#C9A14A]">
                     <PiTestTubeFill className="text-xl" />
@@ -200,22 +231,22 @@ const AppointmentDetails = ({ isOpen, onClose, appointment }) => {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Service:</span>
-                  <span className="font-medium">Mobile Blood Draw</span>
+                  <span className="font-medium">{appointmentData?.service_name || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Date:</span>
                   <span className="font-medium text-gray-600">
-                    March 15, 2024
+                    {appointmentData?.request_date || 'N/A'}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Time:</span>
-                  <span className="font-medium text-gray-600">10:30 AM</span>
+                  <span className="font-medium text-gray-600">{appointmentData?.request_time || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t border-blue-200">
                   <span className="text-gray-600">Total Amount:</span>
                   <span className="text-xl font-bold text-[#C9A14A]">
-                    $89.00
+                    ${appointmentData?.total_amount || '0.00'}
                   </span>
                 </div>
               </div>

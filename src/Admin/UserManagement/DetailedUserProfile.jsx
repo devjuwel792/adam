@@ -16,7 +16,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const DetailedUserProfile = ({ user, isOpen, onClose }) => {
+  console.log("🚀 ~ DetailedUserProfile ~ user:", user);
+  if (!user) return null;
   const { data, isLoading, error } = useGetUserProfileQuery(user?.id);
+
   const [updateUserStatus] = useUpdateUserStatusMutation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -72,7 +75,9 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
           isLoading ? (
             <p>Loading profile...</p>
           ) : (
-            error && <p className=" p-10 text-red-600">Error loading profile.</p>
+            error && (
+              <p className=" p-10 text-red-600">Error loading profile.</p>
+            )
           )
         }
         {data && !isLoading && !error && (
@@ -92,9 +97,22 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                     </h2>
                     <p className="text-gray-600">{profile.role}</p>
                     <div className="flex items-center space-x-3 mt-1">
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        <div className="w-2 h-2 bg-[#166534] rounded-full mr-1"></div>
-                        Approved
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          profile.status.toLowerCase() === "approved"
+                            ? "bg-green-100 text-green-800"
+                            : profile.status.toLowerCase() === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        } `}
+                      >
+                        {profile.status.toLowerCase() === "approved"
+                          ? "🟢"
+                          : profile.status.toLowerCase() === "pending"
+                          ? "🟡"
+                          : "🔴"}
+
+                        {profile.status}
                       </span>
                       <span className="text-sm text-gray-500">
                         Member since{" "}
@@ -143,89 +161,104 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                       Personal Information
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Email Address
-                        </label>
-                        <p className="text-gray-500">{profile.email}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Phone Number
-                        </label>
-                        <p className="text-gray-500">{profile.phone}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Date of Birth
-                        </label>
-                        <p className="text-gray-500">
-                          {new Date(profile.birth_date).toLocaleDateString(
-                            "en-US",
-                            { year: "numeric", month: "long", day: "numeric" }
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Gender
-                        </label>
-                        <p className="text-gray-500">{profile.gender}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Service Area
-                        </label>
-                        <p className="text-gray-500">{profile.service_area}</p>
-                      </div>
+                      {profile.email && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Email Address
+                          </label>
+                          <p className="text-gray-500">{profile.email}</p>
+                        </div>
+                      )}
+                      {profile.phone && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Phone Number
+                          </label>
+                          <p className="text-gray-500">{profile.phone}</p>
+                        </div>
+                      )}
+                      {profile.birth_date && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Date of Birth
+                          </label>
+                          <p className="text-gray-500">
+                            {new Date(profile.birth_date).toLocaleDateString(
+                              "en-US",
+                              { year: "numeric", month: "long", day: "numeric" }
+                            )}
+                          </p>
+                        </div>
+                      )}
+                      {profile.gender && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Gender
+                          </label>
+                          <p className="text-gray-500">{profile.gender}</p>
+                        </div>
+                      )}
+                      {profile.service_area && (
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Service Area
+                          </label>
+                          <p className="text-gray-500">
+                            {profile.service_area}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
-
                   {/* Professional Information */}
-                  <div className="shadow-sm border border-gray-100 p-6 rounded-lg">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Professional Information
-                    </h3>
-                    <div className="mb-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Years of Experience
-                      </label>
-                      <p className="text-gray-900">3.5 years</p>
-                    </div>
-                    <div>
-                      <label className="block text-md font-semibold text-gray-900 mb-2">
-                        Skill
-                      </label>
-                      <div className="flex flex-wrap gap-2">
-                        {profile?.skills?.split(", ").map((skill, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-[#0C1A2A]"
-                          >
-                            {skill.trim()}
-                            <button
-                              onClick={() => handleSkillRemove(skill)}
-                              className="ml-2 text-gray-700 "
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M6 18L18 6M6 6l12 12"
-                                />
-                              </svg>
-                            </button>
-                          </span>
-                        ))}
+                  {profile.role.toLowerCase() == "phlebotomist" && (
+                    <div className="shadow-sm border border-gray-100 p-6 rounded-lg">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        Professional Information
+                      </h3>
+                      <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Years of Experience
+                        </label>
+                        <p className="text-gray-900">3.5 years</p>
                       </div>
+                      {profile?.skills && profile.skills.trim() && (
+                        <div>
+                          <label className="block text-md font-semibold text-gray-900 mb-2">
+                            Skill
+                          </label>
+                          <div className="flex flex-wrap gap-2">
+                            {profile.skills.split(", ").map((skill, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-[#0C1A2A]"
+                              >
+                                {skill.trim()}
+                                {/* <button
+                                  onClick={() => handleSkillRemove(skill)}
+                                  className="ml-2 text-gray-700 "
+                                >
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </button> */}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  )}
 
                   {/* Document Verification */}
                   <div className="p-6">
@@ -233,7 +266,7 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                       Document Verification
                     </h3>
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex  flex-col p-4 border rounded-lg">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8  rounded-lg flex items-center justify-center">
                             <HiDocumentAdd className="text-[24px] text-[#00A6A6]" />
@@ -247,12 +280,15 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                             </p>
                           </div>
                         </div>
-                        <span className="inline-flex gap-1 items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <div className="self-center mt-5">
+                          No License Available
+                        </div>
+                        {/* <span className="inline-flex gap-1 items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           <FaCircleCheck />
                           Approved
-                        </span>
+                        </span> */}
                       </div>
-                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex flex-col p-4 border rounded-lg">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8  rounded-lg flex items-center justify-center">
                             <FaCertificate className="text-[20px] text-[#00A6A6]" />
@@ -266,10 +302,13 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                             </p>
                           </div>
                         </div>
-                        <span className="inline-flex gap-1 items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {/* <span className="inline-flex gap-1 items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           <FaCircleCheck />
                           Approved
-                        </span>
+                        </span> */}
+                        <div className="self-center mt-5">
+                          No Certification Available{" "}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -309,21 +348,48 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                       </div>
                     </div>
                   </div>
-
+                  {/* Weekly Availability */}
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-gray-900 mb-4">
+                      Weekly Availability
+                    </h4>
+                    <div className="space-y-2">
+                      {profile?.weekly_schedule?.map((schedule, index) => (
+                        <div
+                          key={index}
+                          className="flex justify-between items-center p-2 bg-gray-50 rounded-lg"
+                        >
+                          <span className="font-medium text-gray-900">
+                            {schedule.day}
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            {schedule.start_time} - {schedule.end_time}
+                          </span>
+                        </div>
+                      )) || (
+                        <div className="text-sm text-gray-600">
+                          No schedule available
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   {/* Quick Actions */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">
                       Quick Actions
                     </h3>
                     <div className="space-y-3">
-                      <button className="w-full gap-1 bg-[#00A6A6] text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
+                      {/* <button className="w-full gap-1 bg-[#00A6A6] text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
                         <FaEdit />
                         Edit Profile
-                      </button>
-                      <button className="w-full gap-2 bg-[#3B82F6] text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
-                        <FaMessage />
-                        Send Message
-                      </button>
+                      </button> */}
+                      {profile?.status.toLowerCase() === "approved" && (
+                        <button className="w-full gap-2 bg-[#3B82F6] text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
+                          <FaMessage />
+                          Send Message
+                        </button>
+                      )}
+
                       <div className="relative">
                         <button
                           onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -335,16 +401,16 @@ const DetailedUserProfile = ({ user, isOpen, onClose }) => {
                         {dropdownOpen && (
                           <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                             <button
-                              onClick={() => handleUpdateStatus("approved")}
-                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                              Approved
-                            </button>
-                            <button
                               onClick={() => handleUpdateStatus("pending")}
                               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             >
                               Pending
+                            </button>
+                            <button
+                              onClick={() => handleUpdateStatus("approved")}
+                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Approved
                             </button>
                           </div>
                         )}

@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
 import Avatar from "@/assets/images/Image-52.png";
+import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
-import { FaAngleDown } from "react-icons/fa6";
-import DetailedUserProfile from "./DetailedUserProfile";
-import AppointmentDetails from "./AppointmentDetails";
+import { toast } from "react-toastify";
+import {
+  useGetUsersListQuery,
+  useUpdateUserStatusMutation,
+} from "../../store/services/userManagementApi";
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
-import { useGetUsersListQuery } from "../../store/services/userManagementApi";
+import AppointmentDetails from "./AppointmentDetails";
+import DetailedUserProfile from "./DetailedUserProfile";
 
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,8 +17,21 @@ const UserManagement = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [visibleUsersCount, setVisibleUsersCount] = useState(10);
 
   const { data: usersData, isLoading, error } = useGetUsersListQuery();
+  const [updateUserStatus] = useUpdateUserStatusMutation();
+
+  const handleUpdateStatus = async (userId, status) => {
+    try {
+      await updateUserStatus({ userId, status }).unwrap();
+      handleStatusChange(userId, status);
+      toast.success("Status updated successfully!");
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      toast.error("Failed to update status.");
+    }
+  };
 
   const [userList, setUserList] = useState([]);
 
@@ -76,14 +92,15 @@ const UserManagement = () => {
     return (
       <div className="w-28">
         <SelectionDropdown
-          options={["pending", "active", "draft"]}
+          options={["pending", "approved"]}
           selected={selectedAction[user.id] || user.status} // user unique id অনুযায়ী
-          onSelect={(action) =>
+          onSelect={(action) => {
             setSelectedAction((prev) => ({
               ...prev,
               [user.id]: action,
-            }))
-          }
+            }));
+            handleUpdateStatus(user.id, action);
+          }}
         />
       </div>
     );
@@ -99,6 +116,17 @@ const UserManagement = () => {
       selectedStatus === "All Status" || user.status === selectedStatus;
     return matchesSearch && matchesRole && matchesStatus;
   });
+
+  const visibleUsers = filteredUsers.slice(0, visibleUsersCount);
+
+  const handleLoadMore = () => {
+    setVisibleUsersCount((prev) => prev + 10);
+  };
+
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleUsersCount(10);
+  }, [searchTerm, selectedRole, selectedStatus]);
 
   return (
     <div
@@ -183,64 +211,64 @@ const UserManagement = () => {
 
       {/* User List */}
       <div className=" space-y-3 my-6">
-        {filteredUsers.map((user) => (
+        {visibleUsers.map((user) => (
           <div key={user.id}>
-            {user.role === "phlebotomist" && (
-              <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    {/* Avatar */}
-                    <img
-                      src={user.avatar || "/placeholder.svg"}
-                      alt={user.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
+          
+            <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  {/* Avatar */}
+                  <img
+                    src={user.avatar || "/placeholder.svg"}
+                    alt={user.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
 
-                    {/* User Info */}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {user.name}
-                      </h3>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(
-                            user.role
-                          )}`}
-                        >
-                          {user.role}
-                        </span>
-                        <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
-                            user.status
-                          )}`}
-                        >
-                          {user.status}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          Joined: {user.joinDate}
-                        </span>
-                      </div>
+                  {/* User Info */}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {user.name}
+                    </h3>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(
+                          user.role
+                        )}`}
+                      >
+                        {user.role}
+                      </span>
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(
+                          user.status
+                        )}`}
+                      >
+                        {user.status}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        Joined: {user.joinDate}
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        setSelectedUser(user);
-                        setIsProfileOpen(true);
-                      }}
-                      // onClick={() => handleStatusChange(user.id, "Approved")}
-                      className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
-                    >
-                      <FaEye /> View
-                    </button>
-                    {getActionButton(user)}
-                  </div>
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setIsProfileOpen(true);
+                    }}
+                    // onClick={() => handleStatusChange(user.id, "Approved")}
+                    className="px-3 flex gap-1 items-center justify-center py-1 bg-[#C9A14A] text-white text-sm rounded-md transition-colors"
+                  >
+                    <FaEye /> View
+                  </button>
+                  {getActionButton(user)}
                 </div>
               </div>
-            )}
-            {user.role !== "phlebotomist" && (
+            </div>
+           
+            {/* {user.role !== "phlebotomist" && (
               <div className="p-6 rounded-md bg-[#f6f6f6] hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
@@ -267,15 +295,22 @@ const UserManagement = () => {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         ))}
       </div>
-      <div className=" space-y-3 mt-6 pb-[100px]">
-        {filteredUsers.map((user) => (
-          <></>
-        ))}
-      </div>
+
+      {/* Load More Button */}
+      {visibleUsersCount < filteredUsers.length && (
+        <div className="flex justify-center mt-6 pb-[100px]">
+          <button
+            onClick={handleLoadMore}
+            className="px-6 py-2 bg-[#C9A14A] text-white rounded-md hover:bg-[#b8943f] transition-colors"
+          >
+            Load More
+          </button>
+        </div>
+      )}
 
       {/* Empty State */}
       {filteredUsers.length === 0 && !isLoading && (
@@ -303,7 +338,7 @@ const UserManagement = () => {
         isOpen={isProfileOpen}
         onClose={() => {
           setIsProfileOpen(false);
-          setSelectedUser(null);          
+          setSelectedUser(null);
         }}
         user={selectedUser}
       />

@@ -33,21 +33,21 @@ export default function OurCoreValues() {
   ]
 
   return (
-    <section className="bg-gray-50 py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-[#2c2c2c] text-center mb-12">Our Core Values</h2>
+    <section className="bg-gray-50 py-16 md:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] text-center mb-12 md:mb-16">Our Core Values</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {values.map((value, index) => {
             const IconComponent = value.icon
             return (
-              <div key={index} className="bg-white rounded-lg p-6 text-center shadow-xl">
+              <div key={index} className="bg-white rounded-lg p-6 text-center shadow-lg">
                 <div
                   className={`w-12 h-12 ${value.bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}
                 >
                   <IconComponent className={`w-6 h-6 ${value.iconColor}`} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{value.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">{value.description}</p>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">{value.title}</h3>
+                <p className="text-base text-gray-600 leading-relaxed">{value.description}</p>
               </div>
             )
           })}

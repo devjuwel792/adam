@@ -1,21 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../baseQuery";
 
 // Job Management API slice
-const baseUrl = "http://10.10.13.22:8000";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const jobManagementApi = createApi({
   reducerPath: "jobManagementApi",
   tagTypes: ['Jobs'],
-  baseQuery: fetchBaseQuery({
-    baseUrl,
-    prepareHeaders: (headers, { getState }) => {
-      let token = getState()?.auth?.token;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getJobsList: builder.query({
       query: () => "/dashboard/jobs/list/",

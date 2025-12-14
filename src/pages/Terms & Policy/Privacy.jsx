@@ -81,21 +81,21 @@ export default function PrivacyPolicy() {
 
         {/* Hero Text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-7xl md:text-8xl font-bold text-white mb-4 tracking-wide text-center">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white mb-4 tracking-wide text-center">
             Privacy Policy
           </h1>
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="bg-white rounded-3xl shadow-md border border-[#A1A1A1]/14 p-8 md:p-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+        <div className="bg-white rounded-3xl shadow-md border border-[#A1A1A1]/14 p-6 sm:p-8">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 pb-6 border-b border-[#E5E7EB]">
-            <h2 className="text-2xl md:text-3xl font-semibold text-[#C9A14A] mb-2 md:mb-0">
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8 pb-6 border-b border-[#E5E7EB]">
+            <h2 className="text-2xl font-semibold text-[#C9A14A]">
               Privacy Policy
             </h2>
-            <div className="flex items-center text-gray-500 text-sm">
+            <div className="flex items-center text-gray-500 text-sm self-start md:self-center">
               Last updated: July 19, 2025
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function PrivacyPolicy() {
 
             {/* Dynamically Generated Sections */}
             {sections.map((section, index) => (
-              <div key={index}>
+              <section key={index}>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
                   {section.title}
                 </h3>
@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
                     <li key={idx} dangerouslySetInnerHTML={{ __html: item }} />
                   ))}
                 </ul>
-              </div>
+              </section>
             ))}
           </div>
         </div>

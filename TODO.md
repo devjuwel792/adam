@@ -1,0 +1,3 @@
+- [ ] Conditionally render Personal Information fields (email, phone, birth_date, gender, service_area) only if they have values
+- [ ] Conditionally render Skills section in Professional Information only if skills exist
+- [ ] Test the component to ensure empty fields are hidden properly

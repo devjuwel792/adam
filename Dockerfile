@@ -1,29 +1,27 @@
 # 1️⃣ Build stage
-FROM node:20-bullseye AS build
- 
-# Set working directory
+FROM node:20-alpine AS build
+
 WORKDIR /app
- 
-# Copy package files and install dependencies
+
 COPY package.json package-lock.json ./
-RUN npm ci
- 
-# Copy the rest of the project
+RUN npm ci --ignore-scripts
+
+# Rebuild native binaries (esbuild) for the current platform
+RUN npm rebuild esbuild
+
 COPY . .
- 
-# Build the project
+
 RUN npm run build
- 
+
 # 2️⃣ Run stage
-FROM node:20-bullseye
- 
+FROM node:20-alpine
+
 WORKDIR /app
- 
-# Copy built files and node_modules from build stage
-COPY --from=build /app /app
- 
-# Expose port used by Vite preview
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
+
 EXPOSE 4173
- 
-# Start Vite preview
-CMD ["npm", "run", "preview"]
+
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]

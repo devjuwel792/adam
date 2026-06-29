@@ -6,8 +6,17 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: "0.0.0.0", // your local IP (no leading space)
-    port: 5173, // default Vite dev server port
+    host: "0.0.0.0",
+    port: 5173,
+  },
+  preview: {
+    host: "0.0.0.0",
+    port: 4173,
+    allowedHosts: [
+      "primepathstaff.com",
+      "www.primepathstaff.com",
+      "server.primepathstaff.com",
+    ],
   },
   resolve: {
     alias: {

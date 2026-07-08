@@ -4,7 +4,7 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs"],
   endpoints: (builder) => ({
     getDashboardData: builder.query({
       query: () => "/dashboard/home/",
@@ -15,13 +15,13 @@ export const dashboardApi = createApi({
       providesTags: ["PendingRegistrations"],
     }),
     getUserDetailsForApproval: builder.query({
-      query: (user_id) => `/dashboard/home/user-details-for-approval/${user_id}`,
+      query: (user_id) => `/dashboard/home/user-details-for-approval/${user_id}/`,
       providesTags: (result, error, user_id) => [{ type: "UserDetails", id: user_id }],
     }),
     approveUser: builder.mutation({
       query: ({ user_id, approve }) => ({
         url: `/dashboard/home/user-approval/${user_id}/`,
-        method: "PATCH",
+        method: "POST",
         body: { approve },
       }),
       invalidatesTags: ["PendingRegistrations", "Dashboard"],
@@ -29,7 +29,7 @@ export const dashboardApi = createApi({
     suspendUnsuspendUser: builder.mutation({
       query: ({ user_id, suspend }) => ({
         url: `/dashboard/home/suspend-unsuspend/${user_id}/`,
-        method: "PATCH",
+        method: "POST",
         body: { suspend },
       }),
       invalidatesTags: ["Dashboard"],
@@ -41,10 +41,33 @@ export const dashboardApi = createApi({
     approveDocument: builder.mutation({
       query: ({ user_id, document_id, approve }) => ({
         url: `/dashboard/home/doc-approval/${user_id}/${document_id}/`,
-        method: "PATCH",
+        method: "POST",
         body: { approve },
       }),
       invalidatesTags: ["PendingDocuments", "Dashboard"],
+    }),
+    getJobsList: builder.query({
+      query: ({ search = "", status = "", date = "" } = {}) => {
+        const params = new URLSearchParams();
+        if (search) params.append("search", search);
+        if (status) params.append("status", status);
+        if (date) params.append("date", date);
+        const qs = params.toString();
+        return `/dashboard/job-managements/${qs ? `?${qs}` : ""}`;
+      },
+      providesTags: ["Jobs"],
+    }),
+    getJobDetail: builder.query({
+      query: (job_id) => `/dashboard/job-managements/${job_id}/`,
+      providesTags: (result, error, job_id) => [{ type: "Jobs", id: job_id }],
+    }),
+    updateJobStatus: builder.mutation({
+      query: ({ job_id, status }) => ({
+        url: `/dashboard/job-managements/${job_id}/`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Jobs"],
     }),
   }),
 });
@@ -57,4 +80,7 @@ export const {
   useSuspendUnsuspendUserMutation,
   useGetPendingDocumentsQuery,
   useApproveDocumentMutation,
+  useGetJobsListQuery,
+  useGetJobDetailQuery,
+  useUpdateJobStatusMutation,
 } = dashboardApi;

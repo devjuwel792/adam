@@ -1,15 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import { authApi } from "./services/authApi";
+import { dashboardApi } from "./services/dashboardApi";
 
-// Configure the Redux store with the RTK Query API reducer and middleware
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     [authApi.reducerPath]: authApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware),
+    getDefaultMiddleware().concat(authApi.middleware, dashboardApi.middleware),
 });
 
 export default store;

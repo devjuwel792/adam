@@ -4,7 +4,7 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users"],
   endpoints: (builder) => ({
     getDashboardData: builder.query({
       query: () => "/dashboard/home/",
@@ -69,6 +69,25 @@ export const dashboardApi = createApi({
       }),
       invalidatesTags: ["Jobs"],
     }),
+    getUsersList: builder.query({
+      query: () => "/dashboard/user-managements/",
+      providesTags: ["Users"],
+    }),
+    getUserDetail: builder.query({
+      query: (user_id) => `/dashboard/user-managements/${user_id}/`,
+      providesTags: (result, error, user_id) => [{ type: "Users", id: user_id }],
+    }),
+    editUser: builder.mutation({
+      query: ({ user_id, body }) => ({
+        url: `/dashboard/user-managements/${user_id}/edit/`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (result, error, { user_id }) => [
+        { type: "Users", id: user_id },
+        "Users",
+      ],
+    }),
   }),
 });
 
@@ -83,4 +102,7 @@ export const {
   useGetJobsListQuery,
   useGetJobDetailQuery,
   useUpdateJobStatusMutation,
+  useGetUsersListQuery,
+  useGetUserDetailQuery,
+  useEditUserMutation,
 } = dashboardApi;

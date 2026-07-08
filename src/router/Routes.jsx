@@ -8,10 +8,19 @@ import Terms from "../pages/Terms & Policy/Terms";
 import Privacy from "../pages/Terms & Policy/Privacy";
 import { Schedule } from "../pages/Schedule/Schedule";
 import AdminDashboard from "../Admin/Dashboard/AdminDashboard";
-import MessagingInterface from "@/Admin/Communication/MessagingInterface";
 import LoginPage from "../Admin/Login/index";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { PaymentSuccess } from "@/pages/Schedule/PaymentSuccess";
+import AdminLayout from "../Admin/AdminLayout";
+import UserManagement from "../Admin/UserManagement/UserManagement";
+import PatientManagement from "../Admin/UserManagement/PatientManagement";
+import JobManagement from "../Admin/JobManagement/JobManagement";
+import DisputeManagement from "../Admin/DisputeManagement/DisputeManagement";
+import Communication from "../Admin/Communication/Communication";
+import JobMatching from "../Admin/JobMatching/JobMatching";
+import AnalyticsDashboard from "../Admin/AnalyticsDashboard/AnalyticsDashboard";
+import PayrollManagement from "../Admin/PayrollManagement/PayrollManagement";
+import Setting from "../Admin/Setting/Setting";
 
 const router = createBrowserRouter([
   {
@@ -61,9 +70,21 @@ const router = createBrowserRouter([
     path: "/admin",
     element: (
       <ProtectedRoute>
-        <AdminDashboard />
+        <AdminLayout />
       </ProtectedRoute>
     ),
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: "user-management", element: <UserManagement /> },
+      { path: "patient-management", element: <PatientManagement /> },
+      { path: "job-management", element: <JobManagement /> },
+      { path: "dispute-management", element: <DisputeManagement /> },
+      { path: "communication", element: <Communication /> },
+      { path: "job-matching", element: <JobMatching /> },
+      { path: "analytics", element: <AnalyticsDashboard /> },
+      { path: "payroll", element: <PayrollManagement /> },
+      { path: "setting", element: <Setting /> },
+    ],
   },
 ]);
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Avatar from "../../assets/images/Image-52.png";
-import { useGetInappropriateMessageDetailsQuery } from "../../store/services/communicationApi";
+
 import {
   FaArrowRight,
   FaBan,

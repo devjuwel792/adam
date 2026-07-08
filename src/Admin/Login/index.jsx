@@ -17,7 +17,7 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const result = await login({ email, password }).unwrap();
+      const result = await login({ email, password, role: "admin" }).unwrap();
       dispatch(loginSuccess(result));
       navigate("/admin");
     } catch (err) {

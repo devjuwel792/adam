@@ -4,10 +4,7 @@ import DatePicker from "../DataPicker";
 import { FaAngleDown, FaBuilding } from "react-icons/fa6";
 import JobDetailsModal from "./JobDetailsModal";
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
-import {
-  useGetJobsListQuery,
-  useUpdateJobStatusMutation,
-} from "../../store/services/jobManagementApi";
+
 import { toast } from "react-toastify";
 
 const JobManagement = ({ onMessage }) => {

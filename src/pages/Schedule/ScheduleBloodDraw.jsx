@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import {
-  useCreateServiceRequestMutation,
-  useGetServicesQuery,
-} from "@/store/services/user/userApi";
-import { PersonalInformationSection } from "./PersonalInformationSection";
-import { ServiceDetailsSection } from "./ServiceDetailsSection";
-import { MedicalInformationSection } from "./MedicalInformationSection";
+
 import { AdditionalOptionsSection } from "./AdditionalOptionsSection";
-import { SidebarInfo } from "./SidebarInfo";
+import { MedicalInformationSection } from "./MedicalInformationSection";
+import { PersonalInformationSection } from "./PersonalInformationSection";
 import { SecurePaymentModal } from "./SecurePaymentModal";
+import { ServiceDetailsSection } from "./ServiceDetailsSection";
+import { SidebarInfo } from "./SidebarInfo";
 
 export default function BloodDrawBooking() {
   const [formData, setFormData] = useState({

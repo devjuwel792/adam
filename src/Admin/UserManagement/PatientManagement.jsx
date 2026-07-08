@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { FaEye } from "react-icons/fa";
-import {
-  useGetAppointmentsListQuery,
-} from "../../store/services/patientManagementApi";
+
 import AppointmentDetails from "./AppointmentDetails";
 
 const PatientManagement = () => {

@@ -3,11 +3,7 @@ import { FaBan, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { FaFileImage } from "react-icons/fa6";
 import toast from "react-hot-toast"; // Import toast library
 import { IoWarning } from "react-icons/io5";
-import {
-  useGetReportDetailsQuery,
-  useSubmitReportSummaryMutation,
-  useTakeReportActionMutation,
-} from "../../store/services/disputeManagementApi";
+
 
 function CaseDetails({ isOpen, onClose, reportId }) {
   const [selectedAction, setSelectedAction] = useState("");

@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import RichTextEditor from "./RichTextEditor";
-import {
-  useGetPrivacyPolicyQuery,
-  useUpdatePrivacyPolicyMutation,
-} from "../../store/services/settingApi";
+
 
 const PrivacyPolicy = ({ onBack }) => {
   const [isEditing, setIsEditing] = useState(false);

@@ -2,10 +2,7 @@ import Avatar from "@/assets/images/Image-52.png";
 import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
-import {
-  useGetUsersListQuery,
-  useUpdateUserStatusMutation,
-} from "../../store/services/userManagementApi";
+
 import SelectionDropdown from "../Dashboard/SelectionDropdown";
 import AppointmentDetails from "./AppointmentDetails";
 import DetailedUserProfile from "./DetailedUserProfile";

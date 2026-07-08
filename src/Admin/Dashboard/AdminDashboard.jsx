@@ -1,8 +1,4 @@
-import {
-  useGetDashboardDataQuery,
-  useGetPendingBusinessOwnersQuery,
-  useGetPendingPhlebotomistsQuery,
-} from "@/store/services/dashboardApi";
+
 import { useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { FaBriefcase, FaClock, FaDollarSign } from "react-icons/fa6";
@@ -91,49 +87,49 @@ export default function AdminDashboard() {
                 currentComponent === "Dashboard"
                   ? "Welcome back, Admin Fariha"
                   : currentComponent === "User Management"
-                  ? "User Management"
-                  : currentComponent === "Patient Management"
-                  ? "Patient Management"
-                  : currentComponent === "Job Management"
-                  ? "Job Management"
-                  : currentComponent === "Dispute Management"
-                  ? "Dispute Management"
-                  : currentComponent === "Communication & Reviews"
-                  ? "Communication & Reviews Moderation"
-                  : currentComponent === "Job Matching"
-                  ? "Job Matching"
-                  : currentComponent === "Payroll Management"
-                  ? "Payroll Management"
-                  : currentComponent === "Setting"
-                  ? "Setting"
-                  : currentComponent === "Analytics & Reporting"
-                  ? "Analytics & Reporting"
-                  : ""
+                    ? "User Management"
+                    : currentComponent === "Patient Management"
+                      ? "Patient Management"
+                      : currentComponent === "Job Management"
+                        ? "Job Management"
+                        : currentComponent === "Dispute Management"
+                          ? "Dispute Management"
+                          : currentComponent === "Communication & Reviews"
+                            ? "Communication & Reviews Moderation"
+                            : currentComponent === "Job Matching"
+                              ? "Job Matching"
+                              : currentComponent === "Payroll Management"
+                                ? "Payroll Management"
+                                : currentComponent === "Setting"
+                                  ? "Setting"
+                                  : currentComponent === "Analytics & Reporting"
+                                    ? "Analytics & Reporting"
+                                    : ""
               }
               subtitle={
                 currentComponent === "Dashboard"
                   ? "Here's what's happening with Phlebotomist today"
                   : currentComponent === "User Management"
-                  ? "Manage all registered users on the platform"
-                  : currentComponent === "Patient Management"
-                  ? "Manage all registered patients on the platform"
-                  : currentComponent === "Client Management"
-                  ? "Manage all registered clients on the platform"
-                  : currentComponent === "Job Management"
-                  ? "Review and manage job postings on the platform"
-                  : currentComponent === "Dispute Management"
-                  ? "Review and resolve reported issues and disputes"
-                  : currentComponent === "Communication & Reviews"
-                  ? "Review and resolve reported issues and disputes"
-                  : currentComponent === "Job Matching"
-                  ? "Find and assign qualified phlebotomists to open jobs"
-                  : currentComponent === "Payroll Management"
-                  ? "Review and resolve reported issues and disputes"
-                  : currentComponent === "Setting"
-                  ? "Information about your current plan and usages"
-                  : currentComponent === "Analytics & Reporting"
-                  ? "Monitor platform performance and generate insights"
-                  : ""
+                    ? "Manage all registered users on the platform"
+                    : currentComponent === "Patient Management"
+                      ? "Manage all registered patients on the platform"
+                      : currentComponent === "Client Management"
+                        ? "Manage all registered clients on the platform"
+                        : currentComponent === "Job Management"
+                          ? "Review and manage job postings on the platform"
+                          : currentComponent === "Dispute Management"
+                            ? "Review and resolve reported issues and disputes"
+                            : currentComponent === "Communication & Reviews"
+                              ? "Review and resolve reported issues and disputes"
+                              : currentComponent === "Job Matching"
+                                ? "Find and assign qualified phlebotomists to open jobs"
+                                : currentComponent === "Payroll Management"
+                                  ? "Review and resolve reported issues and disputes"
+                                  : currentComponent === "Setting"
+                                    ? "Information about your current plan and usages"
+                                    : currentComponent === "Analytics & Reporting"
+                                      ? "Monitor platform performance and generate insights"
+                                      : ""
               }
             />
           </div>
@@ -167,8 +163,8 @@ export default function AdminDashboard() {
                           isLoading
                             ? "..."
                             : (
-                                dashboardData?.pending_verification || 0
-                              ).toString()
+                              dashboardData?.pending_verification || 0
+                            ).toString()
                         }
                         icon={FaClock}
                         color="orange"
@@ -179,8 +175,8 @@ export default function AdminDashboard() {
                           isLoading
                             ? "..."
                             : (
-                                dashboardData?.total_approved_jobs || 0
-                              ).toString()
+                              dashboardData?.total_approved_jobs || 0
+                            ).toString()
                         }
                         icon={FaBriefcase}
                         color="blue"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useGetReportsListQuery } from "../../store/services/disputeManagementApi";
+
 import { FaEye } from "react-icons/fa";
 import { FaCheck, FaClock } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";

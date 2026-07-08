@@ -8,7 +8,7 @@ import visa from "../../assets/images/visa.png";
 import mc from "../../assets/images/mc.png";
 import ame from "../../assets/images/ame.png"; // Assuming these are still used for display
 import dis from "../../assets/images/dis.png"; // Assuming these are still used for display
-import { useUpdateBillingAndCreateStripeSessionMutation } from "@/store/services/user/userApi";
+
 
 export function SecurePaymentModal({
   isOpen,

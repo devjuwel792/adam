@@ -4,7 +4,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
 import { useState } from "react";
 import SelectionDropdown from "./SelectionDropdown";
-import { useGetPendingPhlebotomistDetailsQuery, useApproveRejectProfileMutation } from "../../store/services/dashboardApi";
+
 import { toast, ToastContainer } from 'react-toastify';
 
 const ProfileModal = ({ isOpen, onClose, professional_id }) => {

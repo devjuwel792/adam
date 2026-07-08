@@ -8,10 +8,7 @@ import {
   FaMessage,
 } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
-import {
-  useGetUserProfileQuery,
-  useUpdateUserStatusMutation,
-} from "../../store/services/userManagementApi";
+
 import { useState } from "react";
 import { toast } from "react-toastify";
 

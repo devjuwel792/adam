@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaCertificate, FaLocationDot } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
 import ProfessionalComparison from "./ProfessionalComparison";
-import { useGetAvailablePhlebotomistsQuery, useAssignJobToPhlebotomistMutation } from "../../store/services/jobMatchingApi";
+
 import { toast } from "react-toastify";
 
 const AvailablePhlebotomists = ({ isOpen, onClose, job }) => {

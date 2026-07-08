@@ -19,10 +19,7 @@ import {
   FaLocationDot,
 } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
-import {
-  useGetJobDetailQuery,
-  useUpdateJobStatusMutation,
-} from "../../store/services/jobManagementApi";
+
 import { toast } from "react-toastify";
 
 const JobDetailsModal = ({ isOpen, onClose, job, onMessage }) => {

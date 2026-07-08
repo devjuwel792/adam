@@ -1,10 +1,7 @@
-import { useState } from "react";
+
 import Avatar from "../../assets/images/Image-52.png";
 import { FaCheck } from "react-icons/fa6";
-import {
-  useGetPhlebotomistProfileQuery,
-  useAssignJobToPhlebotomistMutation,
-} from "../../store/services/jobMatchingApi";
+
 import { toast } from "react-toastify";
 
 const ProfessionalComparison = ({ isOpen, onClose, phlebotomistId, jobId }) => {

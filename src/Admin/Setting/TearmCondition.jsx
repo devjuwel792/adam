@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import PrivacyPolicy from "./Privacy";
 import RichTextEditor from "./RichTextEditor";
-import {
-  useGetTermsAndConditionsQuery,
-  useUpdateTermsAndConditionsMutation,
-} from "../../store/services/settingApi";
+
 
 const TermsAndConditions = () => {
   const [currentView, setCurrentView] = useState("terms"); // 'terms' or 'privacy'

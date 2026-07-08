@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useGetInappropriateMessagesQuery } from "../../store/services/communicationApi";
+
 import ContentReviewDetails from "./ContentReviewDetails";
 
 const Review = ({onPageShow}) => {

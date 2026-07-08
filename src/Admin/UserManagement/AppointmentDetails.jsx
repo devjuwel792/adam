@@ -3,7 +3,7 @@ import { HiDocumentPlus } from "react-icons/hi2";
 import { PiTestTubeFill } from "react-icons/pi";
 import { FaStar, FaUsers } from "react-icons/fa";
 import AvatarImage from "../../assets/images/Image-52.png";
-import { useGetAppointmentDetailsQuery } from "../../store/services/patientManagementApi";
+
 
 const AppointmentDetails = ({ isOpen, onClose, appointmentId }) => {
   const { data: appointmentData, isLoading, error } = useGetAppointmentDetailsQuery(appointmentId, { skip: !appointmentId });

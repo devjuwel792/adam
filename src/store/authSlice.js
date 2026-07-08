@@ -13,15 +13,17 @@ const authSlice = createSlice({
     loginSuccess: (state, action) => {
       state.isAuthenticated = true;
       state.user = {
-        username: action.payload.username,
-        full_name: action.payload.full_name,
-        gender: action.payload.gender,
-        email: action.payload.email,
+        user_id: action.payload.user_id,
+        user_full_name: action.payload.user_full_name,
+        user_email: action.payload.user_email,
+        user_phone_number: action.payload.user_phone_number,
+        user_profile_picture: action.payload.user_profile_picture,
+        is_approved: action.payload.is_approved,
         role: action.payload.role,
       };
-      state.token = action.payload.access_token;
-      localStorage.setItem('authToken', action.payload.access_token);
-      localStorage.setItem('refreshToken', action.payload.refresh_token);
+      state.token = action.payload.access;
+      localStorage.setItem('authToken', action.payload.access);
+      localStorage.setItem('refreshToken', action.payload.refresh);
       localStorage.setItem('user', JSON.stringify(state.user));
     },
     logout: (state) => {

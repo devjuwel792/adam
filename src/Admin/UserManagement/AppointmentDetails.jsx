@@ -6,7 +6,7 @@ import AvatarImage from "../../assets/images/Image-52.png";
 
 
 const AppointmentDetails = ({ isOpen, onClose, appointmentId }) => {
-  const { data: appointmentData, isLoading, error } = useGetAppointmentDetailsQuery(appointmentId, { skip: !appointmentId });
+  const { data: appointmentData, isLoading, error } = []
 
   if (!isOpen) return null;
 

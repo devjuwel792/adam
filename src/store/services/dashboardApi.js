@@ -4,8 +4,16 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms", "Analytics"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms", "Analytics", "Chats"],
   endpoints: (builder) => ({
+    getChatList: builder.query({
+      query: () => "/communication/chats/",
+      providesTags: ["Chats"],
+    }),
+    getChatMessages: builder.query({
+      query: (partnerId) => `/communication/chats/${partnerId}/`,
+      providesTags: (result, error, partnerId) => [{ type: "Chats", id: partnerId }],
+    }),
     getAnalytics: builder.query({
       query: ({ job_type = "", business_name = "" } = {}) => {
         const params = new URLSearchParams();
@@ -195,6 +203,8 @@ export const dashboardApi = createApi({
 });
 
 export const {
+  useGetChatListQuery,
+  useGetChatMessagesQuery,
   useGetAnalyticsQuery,
   useGetTermsAndConditionsQuery,
   useUpdateTermsAndConditionsMutation,

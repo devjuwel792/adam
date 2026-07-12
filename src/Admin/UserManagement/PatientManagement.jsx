@@ -8,7 +8,7 @@ const PatientManagement = () => {
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
-  const { data: appointmentsData, isLoading, error } = useGetAppointmentsListQuery();
+  const { data: appointmentsData, isLoading, error } =[];
 
   const filteredAppointments = appointmentsData?.filter((appointment) =>
     appointment.user_full_name

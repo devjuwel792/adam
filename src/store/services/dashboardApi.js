@@ -4,7 +4,7 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching"],
   endpoints: (builder) => ({
     getDashboardData: builder.query({
       query: () => "/dashboard/home/",
@@ -64,10 +64,83 @@ export const dashboardApi = createApi({
     updateJobStatus: builder.mutation({
       query: ({ job_id, status }) => ({
         url: `/dashboard/job-managements/${job_id}/update-status/`,
-        method: "POST",
+        method: "PATCH",
         body: { status },
       }),
       invalidatesTags: ["Jobs"],
+    }),
+    getDisputeStatistics: builder.query({
+      query: () => "/dashboard/dispute-statistics/",
+      providesTags: ["Disputes"],
+    }),
+    getDisputesList: builder.query({
+      query: () => "/dashboard/disputes/",
+      providesTags: ["Disputes"],
+    }),
+    getDisputeDetail: builder.query({
+      query: (report_id) => `/dashboard/disputes/${report_id}/`,
+      providesTags: (result, error, report_id) => [{ type: "Disputes", id: report_id }],
+    }),
+    updateDispute: builder.mutation({
+      query: ({ report_id, ...body }) => ({
+        url: `/dashboard/disputes/${report_id}/`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (result, error, { report_id }) => [
+        { type: "Disputes", id: report_id },
+        "Disputes",
+      ],
+    }),
+    getJobMatchingList: builder.query({
+      query: () => "/dashboard/job-matching/",
+      providesTags: ["JobMatching"],
+    }),
+    getAvailableUsers: builder.query({
+      query: () => "/dashboard/job-matching/available-users/",
+      providesTags: ["JobMatching"],
+    }),
+    getAvailableUserDetail: builder.query({
+      query: (id) => `/dashboard/job-matching/available-users/${id}/`,
+      providesTags: (result, error, id) => [{ type: "JobMatching", id }],
+    }),
+    getPayrollList: builder.query({
+      query: () => "/dashboard/payroll/",
+      providesTags: ["Payroll"],
+    }),
+    getPayrollDetail: builder.query({
+      query: (job_id) => `/dashboard/payroll/${job_id}/`,
+      providesTags: (result, error, job_id) => [{ type: "Payroll", id: job_id }],
+    }),
+    confirmPayment: builder.mutation({
+      query: (job_id) => ({
+        url: `/dashboard/payroll/${job_id}/`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Payroll"],
+    }),
+    getReviewsList: builder.query({
+      query: () => "/dashboard/reviews/",
+      providesTags: ["Reviews"],
+    }),
+    getReviewDetail: builder.query({
+      query: (id) => `/dashboard/reviews/${id}/`,
+      providesTags: (result, error, id) => [{ type: "Reviews", id }],
+    }),
+    updateReviewStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/dashboard/reviews/${id}/`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Reviews", id }, "Reviews"],
+    }),
+    deleteReview: builder.mutation({
+      query: (id) => ({
+        url: `/dashboard/reviews/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Reviews"],
     }),
     getUsersList: builder.query({
       query: () => "/dashboard/user-managements/",
@@ -102,6 +175,20 @@ export const {
   useGetJobsListQuery,
   useGetJobDetailQuery,
   useUpdateJobStatusMutation,
+  useGetDisputeStatisticsQuery,
+  useGetDisputesListQuery,
+  useGetDisputeDetailQuery,
+  useUpdateDisputeMutation,
+  useGetJobMatchingListQuery,
+  useGetAvailableUsersQuery,
+  useGetAvailableUserDetailQuery,
+  useGetPayrollListQuery,
+  useGetPayrollDetailQuery,
+  useConfirmPaymentMutation,
+  useGetReviewsListQuery,
+  useGetReviewDetailQuery,
+  useUpdateReviewStatusMutation,
+  useDeleteReviewMutation,
   useGetUsersListQuery,
   useGetUserDetailQuery,
   useEditUserMutation,

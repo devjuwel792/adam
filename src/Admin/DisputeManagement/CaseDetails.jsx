@@ -1,280 +1,195 @@
 import { useState } from "react";
 import { FaBan, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { FaFileImage } from "react-icons/fa6";
-import toast from "react-hot-toast"; // Import toast library
-import { IoWarning } from "react-icons/io5";
+import toast from "react-hot-toast";
+import {
+  useGetDisputeDetailQuery,
+  useUpdateDisputeMutation,
+} from "../../store/services/dashboardApi";
 
+function CaseDetails({ isOpen, reportId, onClose }) {
+  const [adminNotes, setAdminNotes] = useState("");
 
-function CaseDetails({ isOpen, onClose, reportId }) {
-  const [selectedAction, setSelectedAction] = useState("");
-  const [images, setImages] = useState({ one: null, two: null });
-  const [decisionSummary, setDecisionSummary] = useState("");
-
-  const [submitReportSummary, { isLoading: isSubmitting }] =
-    useSubmitReportSummaryMutation();
-
-  const [takeReportAction, { isLoading: isTakingAction }] =
-    useTakeReportActionMutation();
-
-  const {
-    data: reportDetails,
-    isLoading,
-    isError,
-  } = useGetReportDetailsQuery(reportId, {
-    skip: !reportId, // Only fetch if reportId is present
+  const { data, isLoading, isError } = useGetDisputeDetailQuery(reportId, {
+    skip: !reportId,
   });
 
-  const info = reportDetails?.complaint_information;
+  const [updateDispute, { isLoading: isUpdating }] = useUpdateDisputeMutation();
 
-  const handleSubmitDecision = async () => {
-    if (!decisionSummary.trim()) {
-      toast.error("Please enter a decision summary.");
+  const handleAction = async (status) => {
+    if (!adminNotes.trim()) {
+      toast.error("Please enter admin notes before submitting.");
       return;
     }
     try {
-      const response = await submitReportSummary({
-        reportId,
-        message: decisionSummary,
+      await updateDispute({
+        report_id: reportId,
+        status,
+        admin_notes: adminNotes,
+        resolved_at: new Date().toISOString(),
       }).unwrap();
-      toast.success(response.message); // Show success message from API response
-      onClose(); // Close modal on success
-    } catch (error) {
-      toast.error(error.data?.message || "Failed to submit decision."); // Show error message
-      console.error("Failed to submit decision:", error); // Log full error for debugging
+      toast.success("Dispute updated successfully.");
+      onClose();
+    } catch {
+      toast.error("Failed to update dispute.");
     }
   };
 
-  const handleTakeAction = async (actionType) => {
-    // Ensure we have the necessary data before proceeding
-    if (!info?.report_id) {
-      toast.error("Reported user ID is missing. Cannot take action.");
-      return;
-    }
-
-    try {
-      const response = await takeReportAction({
-        reportId,
-        actionType,
-        reported_id: info.report_id, // Pass reported_id in the body
-        action: actionType, // Pass action in the body as per API requirement
-      }).unwrap();
-      toast.success(response.message);
-    } catch (error) {
-      toast.error(error.data?.message || `Failed to ${actionType} user.`);
-    }
-  };
-  const handleImageUpload = (e, key) => {
-    const file = e.target.files[0];
-    if (file) {
-      const url = URL.createObjectURL(file); // preview purpose
-      setImages((prev) => ({ ...prev, [key]: url }));
-    }
-  };
-
-  const actions = [
-    {
-      id: "warn",
-      label: "Resolve Case - Warning Issued",
-      color: "bg-teal-500  text-white",
-      icon: <FaCheckCircle />,
-    },
-    {
-      id: "suspend",
-      label: "Suspend User Account",
-      color: "bg-red-500  text-white",
-      icon: <FaBan />,
-    },
-    {
-      id: "dismiss",
-      label: "Dismiss Case",
-      color: "bg-gray-500  text-white",
-      icon: <FaTimesCircle />,
-    },
-  ]; // warn - suspend - dismiss
-
-  const evidenceItems = [
-    {
-      id: 1,
-      name: "Screenshot 1",
-      date: "Dec 5, 2024 AM",
-    },
-    {
-      id: 2,
-      name: "Screenshot 2",
-      date: "Dec 6, 2024 AM",
-    },
-  ];
-
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white  shadow-xl max-w-[70vw] w-full max-h-[90vh] overflow-y-auto">
-        {isLoading && (
-          <div className="p-10 text-center">Loading case details...</div>
-        )}
-        {isError && (
-          <div className="p-10 text-center text-red-500">
-            Failed to load details.
-          </div>
-        )}
-        {!isLoading && !isError && info && (
-        <><div className="sticky top-0 ">
-            <div className="absolute top-4 right-4">
+      <div className="bg-white shadow-xl max-w-[70vw] w-full max-h-[90vh] overflow-y-auto">
+        {isLoading && <div className="p-10 text-center">Loading case details...</div>}
+        {isError && <div className="p-10 text-center text-red-500">Failed to load details.</div>}
+
+        {!isLoading && !isError && data && (
+          <div className="py-9">
+            {/* Close Button */}
+            <div className="flex justify-end px-4">
               <button
                 onClick={onClose}
-                className="text-gray-400 transition-colors h-8 w-8 bg-gray-200 flex items-center justify-center rounded-full"
+                className="text-gray-400 h-8 w-8 bg-gray-200 flex items-center justify-center rounded-full"
               >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12" />
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-          </div><div className="py-9">
-              {/* Header */}
-              <div
-                style={{
-                  // boxShadow: "0px 4px 6px 0px #0000001A",
-                }}
-                className=" p-6 border-b shadow-md m-5 rounded-md border-gray-200"
-              >
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900">
-                    Case Details
-                  </h2>
-                  <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 border-b pb-2">
-                    <span>Case ID : {info.report_id}</span>
-                    <span>
-                      Filed:{" "}
-                      {new Date(info.reported_on).toLocaleString()}
-                    </span>
+
+            {/* Header */}
+            <div className="p-6 border-b shadow-md m-5 rounded-md border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-900">Case Details</h2>
+              <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 border-b pb-2">
+                <span>Case ID: {data.case_id}</span>
+                <span className="capitalize">Status: {data.report_details?.status}</span>
+              </div>
+
+              <div className="flex justify-between items-start gap-10 pt-3">
+                {/* Complaint Information */}
+                <div className="flex-[3]">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Complaint Information</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Title:</span>
+                      <span className="text-gray-900">{data.report_details?.title}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Reported User:</span>
+                      <span className="text-gray-500">{data.report_details?.reported_user}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Type:</span>
+                      <span className="text-gray-500">{data.complaint_information?.type}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Reported By:</span>
+                      <span className="text-gray-500">{data.complaint_information?.reported_by}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Platform:</span>
+                      <span className="text-gray-500">{data.complaint_information?.platform}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex  justify-between items-center gap-10 pt-3 ">
-                  {/* Complaint Information */}
-                  <div className="flex-[3]">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">
-                      Complaint Information
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Type:</span>
-                        <span className="text-gray-500">{info.type || "N/A"}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Filed By:</span>
-                        <span className="text-gray-900">{info.filled_by}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Reported User:</span>
-                        <span className="text-gray-500">{info.reported_user}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Platform:</span>
-                        <span className="text-gray-500">{info.platform}</span>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Initial Report Summary */}
-                  <div className="flex-[2] p-4">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">
-                      Initial Report Summary
-                    </h3>
-                    <div className=" rounded-lg ">
-                      <p className="text-gray-700 text-sm leading-relaxed">
-                        {info.summary}
-                      </p>
-                    </div>
-                  </div>
+                {/* Report Content */}
+                <div className="flex-[2] p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Report Summary</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">{data.report_content?.summary}</p>
+                  {data.report_content?.date_of_incident && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      Incident: {new Date(data.report_content.date_of_incident).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
               </div>
-              <div className="p-6">
-                <div className="flex flex-col lg:flex-row gap-8">
-                  {/* Left Column */}
-                  <div className="w-full lg:w-1/2">
-                    {/* Decision & Action */}
-                    <div className="p-6 shadow-md rounded-md h-full">
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">
-                        Decision & Action
-                      </h3>
-                      <div>
-                        <p className="text-gray-800 mb-4 font-[600]">
-                          Available Actions
-                        </p>
-                        <div className="space-y-3">
-                          {actions.map((action) => (
-                            <button
-                              key={action.id}
-                              onClick={() => handleTakeAction(action.id)}
-                              disabled={isTakingAction}
-                              className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-colors focus:outline-none ${action.color} disabled:bg-gray-400 disabled:cursor-not-allowed`}
-                            >
-                              <span>{action.icon}</span>
-                              {action.label}
-                            </button>
-                          ))}
+            </div>
+
+            <div className="p-6">
+              <div className="flex flex-col lg:flex-row gap-8">
+                {/* Left: Actions */}
+                <div className="w-full lg:w-1/2 p-6 shadow-md rounded-md">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Decision & Action</h3>
+
+                  {/* Action History */}
+                  {data.action_history?.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-sm font-semibold text-gray-700 mb-2">Action History</p>
+                      {data.action_history.map((item, i) => (
+                        <div key={i} className="text-xs text-gray-500 border-l-2 border-gray-300 pl-3 mb-2">
+                          <p className="font-medium text-gray-700">{item.action}</p>
+                          <p>{item.details}</p>
+                          <p>{new Date(item.timestamp).toLocaleString()}</p>
                         </div>
-                      </div>
+                      ))}
                     </div>
+                  )}
+
+                  <p className="text-gray-800 mb-3 font-semibold">Available Actions</p>
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => handleAction("resolved")}
+                      disabled={isUpdating}
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium bg-teal-500 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                      <FaCheckCircle /> Resolve Case
+                    </button>
+                    <button
+                      onClick={() => handleAction("under_review")}
+                      disabled={isUpdating}
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium bg-blue-500 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                      <FaBan /> Mark Under Review
+                    </button>
+                    {/* <button
+                      onClick={() => handleAction("dismissed")}
+                      disabled={isUpdating}
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium bg-gray-500 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                      <FaTimesCircle /> Dismiss Case
+                    </button> */}
+                  </div>
+                </div>
+
+                {/* Right: Notes & Recommended Action */}
+                <div className="w-full lg:w-1/2 space-y-6 shadow-md rounded-md p-5">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Admin Notes</h3>
+                    <textarea
+                      rows={5}
+                      value={adminNotes}
+                      onChange={(e) => setAdminNotes(e.target.value)}
+                      placeholder="Enter your decision summary and reasoning here..."
+                      className="text-gray-700 rounded-md p-3 border w-full text-[13px] leading-relaxed"
+                      disabled={isUpdating}
+                    />
+                    {data.admin_decision?.admin_notes && (
+                      <p className="text-xs text-gray-400 mt-1">
+                        Previous notes: {data.admin_decision.admin_notes}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Right Column */}
-                  <div className="w-full lg:w-1/2 space-y-6 shadow-md rounded-md p-5">
-                    {/* Decision Summary */}
-                    <div className="p-4">
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">
-                        Decision Summary
-                      </h3>
-                      <div className="rounded-lg">
-                        <textarea
-                          rows={10}
-                          value={decisionSummary}
-                          onChange={(e) => setDecisionSummary(e.target.value)}
-                          placeholder="Enter your decision summary and reasoning here. This will be logged and may be shared with relevant parties..."
-                          className="text-gray-700 rounded-md p-3 border h-[100px] w-full text-[13px] leading-relaxed"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Recommended Action */}
+                  {data.admin_decision?.recommended_action && (
                     <div className="bg-[#ffe9b836] p-4 rounded-md">
-                      <h3 className="text-lg font-medium text-gray-900 mb-4">
-                        Recommended Action
-                      </h3>
-                      <div className=" rounded-lg  mb-4">
-                        <p className="text-gray-700 text-sm leading-relaxed">
-                          Based on evidence review, suspend user account. Clear
-                          violation of harassment policy with evidence of
-                          inappropriate messaging and threatening language.
-                        </p>
-                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">Recommended Action</h3>
+                      <p className="text-gray-700 text-sm">{data.admin_decision.recommended_action}</p>
                     </div>
-                    <div className="flex justify-end">
-                      <button
-                        onClick={handleSubmitDecision}
-                        disabled={isSubmitting}
-                        className=" bg-[#C9A14A] text-white font-medium py-2 px-5 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      >
-                        Submit Decision
-                      </button>
-                    </div>
+                  )}
+
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => handleAction("resolved")}
+                      disabled={isUpdating}
+                      className="bg-[#C9A14A] text-white font-medium py-2 px-5 rounded-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    >
+                      {isUpdating ? "Submitting..." : "Submit Decision"}
+                    </button>
                   </div>
                 </div>
               </div>
-            </div></>
+            </div>
+          </div>
         )}
       </div>
     </div>

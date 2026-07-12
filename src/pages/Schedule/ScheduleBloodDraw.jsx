@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-
+import { useCreateAppointmentMutation, useGetServicePackagesQuery } from "../../store/services/appointmentApi";
 import { AdditionalOptionsSection } from "./AdditionalOptionsSection";
 import { MedicalInformationSection } from "./MedicalInformationSection";
 import { PersonalInformationSection } from "./PersonalInformationSection";
-import { SecurePaymentModal } from "./SecurePaymentModal";
 import { ServiceDetailsSection } from "./ServiceDetailsSection";
 import { SidebarInfo } from "./SidebarInfo";
 
@@ -17,30 +16,24 @@ export default function BloodDrawBooking() {
     phone: "",
     dateOfBirth: "",
     gender: "",
-    testPackage: "",
-    scheduleDate: null,
-    scheduleDate2: null,
-    hospital: "",
+    servicePackage: "",
+    appointmentDate: "",
+    startTime: "",
+    endTime: "",
+    locationType: "home",
     location: "",
     medications: "",
-    prescription: "", // Assuming you'll add a way to upload this
     allergies: "",
     medicalConditions: [],
     specialRequests: "",
     emailNotifications: false,
+    smsReminders: false,
     termsAccepted: false,
     consentAccepted: false,
   });
 
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [appointmentId, setAppointmentId] = useState(null);
-  const [appointmentDetails, setAppointmentDetails] = useState(null);
-
-  const [createServiceRequest, { isLoading: isSubmitting }] =
-    useCreateServiceRequestMutation();
-
-  const { data: services, isLoading: areServicesLoading } =
-    useGetServicesQuery();
+  const [createAppointment, { isLoading: isSubmitting }] = useCreateAppointmentMutation();
+  const { data: services, isLoading: areServicesLoading } = useGetServicePackagesQuery();
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -61,42 +54,37 @@ export default function BloodDrawBooking() {
   };
 
   const handleSubmitBooking = async () => {
-    // Basic validation
     if (!formData.termsAccepted || !formData.consentAccepted) {
       alert("Please accept the terms and consent to continue.");
       return;
     }
 
     const apiBody = {
-      email: formData.email,
       first_name: formData.firstName,
       last_name: formData.lastName,
-      phone: formData.phone,
-      date_of_birth: formatDate(formData.dateOfBirth),
+      email: formData.email,
+      phone_number: formData.phone,
+      dob: formatDate(formData.dateOfBirth),
       gender: formData.gender,
-      test_package: formData.testPackage,
-      start_date: formatDate(formData.scheduleDate),
-      start_date_start_time: "09:00", // Hardcoded as per UI
-      start_date_end_time: "18:00", // Hardcoded as per UI (6:00 PM)
-      end_date: formatDate(formData.scheduleDate2),
-      end_date_start_time: "09:00", // Hardcoded as per UI
-      end_date_end_time: "18:00", // Hardcoded as per UI (6:00 PM)
+      service_package: formData.servicePackage ? Number(formData.servicePackage) : null,
+      appointment_date: formatDate(formData.appointmentDate),
+      start_time: formData.startTime,
+      end_time: formData.endTime,
+      location_type: formData.locationType,
       location: formData.location,
-      current_medication: formData.medications,
-      prescription: formData.prescription || "cloudinary_file_url", // Placeholder
+      current_medications: formData.medications,
       known_allergies: formData.allergies,
-      medical_conditions: formData.medicalConditions,
-      special_request: formData.specialRequests,
-      email_notification_enable: formData.emailNotifications,
-      terms_and_condition_agreement: formData.termsAccepted,
-      agreement: formData.consentAccepted,
+      medical_conditions: formData.medicalConditions.join(", "),
+      special_requests: formData.specialRequests,
+      email_result_notification: formData.emailNotifications,
+      sms_appointment_reminders: formData.smsReminders,
     };
 
     try {
-      const response = await createServiceRequest(apiBody).unwrap();
-      setAppointmentId(response.appointment_id);
-      setAppointmentDetails(response);
-      setIsPaymentModalOpen(true);
+      const response = await createAppointment(apiBody).unwrap();
+      if (response.checkout_url) {
+        window.location.href = response.checkout_url;
+      }
     } catch (error) {
       console.error("Failed to create appointment:", error);
       alert("Failed to create appointment. Please try again.");
@@ -106,7 +94,6 @@ export default function BloodDrawBooking() {
   return (
     <div className="bg-white p-4 sm:p-8 md:p-16 lg:p-20 xl:p-28">
       <div className="max-w-7xl mx-auto w-full">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#2c2c2c] mb-2">
             Schedule Your Blood Draw
@@ -116,9 +103,7 @@ export default function BloodDrawBooking() {
           </p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Form */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Sections (kept as they are) */}
             <PersonalInformationSection
               formData={formData}
               onInputChange={handleInputChange}
@@ -142,30 +127,20 @@ export default function BloodDrawBooking() {
               onInputChange={handleInputChange}
             />
 
-            {/* Terms and Conditions */}
             <div className="space-y-4">
               <div className="flex items-start space-x-2">
                 <input
                   type="checkbox"
                   id="terms"
                   checked={formData.termsAccepted}
-                  onChange={(e) =>
-                    handleInputChange("termsAccepted", e.target.checked)
-                  }
+                  onChange={(e) => handleInputChange("termsAccepted", e.target.checked)}
                   className="mt-1"
                 />
-                <label
-                  htmlFor="terms"
-                  className="text-sm text-[#5B5B5B] leading-relaxed"
-                >
+                <label htmlFor="terms" className="text-sm text-[#5B5B5B] leading-relaxed">
                   I acknowledge that I have read and agree to the{" "}
-                  <span className="text-[#C9A14A] underline cursor-pointer">
-                    Terms of Service
-                  </span>{" "}
+                  <span className="text-[#C9A14A] underline cursor-pointer">Terms of Service</span>{" "}
                   and{" "}
-                  <span className="text-[#C9A14A] underline cursor-pointer">
-                    Privacy Policy
-                  </span>
+                  <span className="text-[#C9A14A] underline cursor-pointer">Privacy Policy</span>
                 </label>
               </div>
 
@@ -174,22 +149,15 @@ export default function BloodDrawBooking() {
                   type="checkbox"
                   id="consent"
                   checked={formData.consentAccepted}
-                  onChange={(e) =>
-                    handleInputChange("consentAccepted", e.target.checked)
-                  }
+                  onChange={(e) => handleInputChange("consentAccepted", e.target.checked)}
                   className="mt-1"
                 />
-                <label
-                  htmlFor="consent"
-                  className="text-sm text-[#5B5B5B] leading-relaxed"
-                >
-                  I consent to receive appointment confirmations and results via
-                  my provided contact information
+                <label htmlFor="consent" className="text-sm text-[#5B5B5B] leading-relaxed">
+                  I consent to receive appointment confirmations and results via my provided contact information
                 </label>
               </div>
             </div>
 
-            {/* Submit Button */}
             <div className="space-y-4">
               <button
                 onClick={handleSubmitBooking}
@@ -204,22 +172,9 @@ export default function BloodDrawBooking() {
             </div>
           </div>
 
-          {/* Sidebar */}
           <SidebarInfo />
         </div>
       </div>
-
-      {isPaymentModalOpen && (
-        <SecurePaymentModal
-          isOpen={isPaymentModalOpen}
-          appointmentId={appointmentId}
-          appointmentDetails={appointmentDetails}
-          selectedServiceTitle={
-            services?.find((s) => s.id === formData.testPackage)?.title || ""
-          }
-          onClose={() => setIsPaymentModalOpen(false)}
-        />
-      )}
     </div>
   );
 }

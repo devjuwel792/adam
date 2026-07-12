@@ -10,15 +10,13 @@ const TermsAndConditions = () => {
     data,
     error: termsError,
     isLoading: termsLoading,
-  } = useGetTermsAndConditionsQuery();
+  } = {};
 
   const termsData = data?.content ? JSON.parse(data.content || "") : "";
   console.log("🚀 ~ TermsAndConditions ~ termsData:", termsData)
 
-  const [
-    updateTermsAndConditions,
-    { isLoading: updateLoading, error: updateError },
-  ] = useUpdateTermsAndConditionsMutation();
+  const 
+    updateTermsAndConditions=null;
   const [content, setContent] = useState({
     termsOfService: "",
     keyPoints: [],

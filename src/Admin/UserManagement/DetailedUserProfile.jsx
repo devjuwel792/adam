@@ -27,7 +27,7 @@ const DetailedUserProfile = ({ userId, isOpen, onClose }) => {
   const handleSuspendToggle = async () => {
     const isSuspended = header?.status === "suspended";
     try {
-      await suspendUnsuspend({ user_id: userId, suspend: !isSuspended }).unwrap();
+      await suspendUnsuspend({ user_id: header?.user_id ?? userId, suspend: !isSuspended }).unwrap();
       toast.success(`User ${isSuspended ? "unsuspended" : "suspended"} successfully!`);
     } catch {
       toast.error("Failed to update user status.");
@@ -61,7 +61,7 @@ const DetailedUserProfile = ({ userId, isOpen, onClose }) => {
       if (editForm.skills) body.skills = editForm.skills.split(",").map((s) => s.trim()).filter(Boolean);
     }
     try {
-      await editUser({ user_id: userId, body }).unwrap();
+      await editUser({ user_id: header?.user_id ?? userId, body }).unwrap();
       toast.success("Profile updated successfully.");
       setIsEditOpen(false);
     } catch {

@@ -29,7 +29,7 @@ export const dashboardApi = createApi({
     suspendUnsuspendUser: builder.mutation({
       query: ({ user_id, suspend }) => ({
         url: `/dashboard/home/suspend-unsuspend/${user_id}/`,
-        method: "POST",
+        method: "patch",
         body: { suspend },
       }),
       invalidatesTags: ["Dashboard"],

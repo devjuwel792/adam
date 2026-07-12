@@ -7,7 +7,8 @@ import tube from "../../assets/images/grayTube.png"
 import tic from "../../assets/images/greenTic.png"
 import alert from "../../assets/images/alert.png"
 
-export function SidebarInfo() {
+export function SidebarInfo({ services = [], selectedPackageId }) {
+  const selected = services.find((s) => String(s.id) === String(selectedPackageId));
   return (
     <div className="space-y-6">
       {/* What to Expect */}
@@ -62,18 +63,25 @@ export function SidebarInfo() {
           <h3 className="font-semibold text-lg text-[#2C2C2C]">Pricing & Payment</h3>
         </div>
         <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-[#5B5B5B]">Basic Panel</span>
-            <span className="font-medium text-sm text-[#2C2C2C]">$89</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-[#5B5B5B]">Comprehensive Panel</span>
-            <span className="font-medium text-sm text-[#2C2C2C]">$149</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-[#5B5B5B]">Executive Panel</span>
-            <span className="font-medium text-sm text-[#2C2C2C]">$249</span>
-          </div>
+          {services.map((s) => (
+            <div
+              key={s.id}
+              className={`flex justify-between items-center rounded-md px-2 py-1 transition-colors ${
+                String(s.id) === String(selectedPackageId) ? "bg-[#FEF3C7]" : ""
+              }`}
+            >
+              <span className="text-sm text-[#5B5B5B]">{s.name}</span>
+              <span className="font-medium text-sm text-[#2C2C2C]">${s.price}</span>
+            </div>
+          ))}
+          {selected && (
+            <div className="pt-3 border-t border-[#C9A14A] mt-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-semibold text-[#2C2C2C]">Selected Total</span>
+                <span className="text-base font-bold text-[#C9A14A]">${selected.price}</span>
+              </div>
+            </div>
+          )}
           <div className="pt-3 border-t border-gray-200">
             <p className="text-xs text-[#5B5B5B]">
               • Payment due at time of service

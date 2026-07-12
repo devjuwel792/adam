@@ -33,7 +33,8 @@ export default function BloodDrawBooking() {
   });
 
   const [createAppointment, { isLoading: isSubmitting }] = useCreateAppointmentMutation();
-  const { data: services, isLoading: areServicesLoading } = useGetServicePackagesQuery();
+  const { data: servicesData, isLoading: areServicesLoading } = useGetServicePackagesQuery();
+  const services = servicesData?.results ?? [];
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -172,7 +173,7 @@ export default function BloodDrawBooking() {
             </div>
           </div>
 
-          <SidebarInfo />
+          <SidebarInfo services={services} selectedPackageId={formData.servicePackage} />
         </div>
       </div>
     </div>

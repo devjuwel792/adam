@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export function ServiceDetailsSection({ formData, onInputChange, services, isLoading }) {
+  const selectedService = services?.find((s) => String(s.id) === String(formData.servicePackage));
+
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-lg p-6">
       <div className="flex items-center gap-3 mb-6">
@@ -35,6 +37,11 @@ export function ServiceDetailsSection({ formData, onInputChange, services, isLoa
               </option>
             ))}
           </select>
+          {selectedService && (
+            <p className="mt-2 text-sm text-[#C9A14A] font-semibold">
+              Price: ${selectedService.price}
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

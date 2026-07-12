@@ -79,12 +79,15 @@ const MessagingInterface = ({ onPageShow }) => {
         const data = JSON.parse(e.data);
         const text = data.message_text || data.message || data.text;
         if (!text) return;
+        const senderId = data.sender_id ?? data.sender?.id;
+        // Skip echo of own messages (already added optimistically)
+        if (senderId === adminId) return;
         setMessages((prev) => [
           ...prev,
           {
             id: data.id || Date.now(),
             text,
-            senderId: data.sender_id ?? data.sender?.id,
+            senderId,
             time: data.created_at || new Date().toISOString(),
           },
         ]);
@@ -94,7 +97,7 @@ const MessagingInterface = ({ onPageShow }) => {
     };
 
     wsRef.current = ws;
-  }, [selectedPartnerId, token]);
+  }, [selectedPartnerId, token, adminId]);
 
   useEffect(() => {
     connectWS();

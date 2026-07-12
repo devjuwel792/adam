@@ -14,6 +14,14 @@ export const dashboardApi = createApi({
       query: () => "/dashboard/admin/terms-and-conditions/",
       providesTags: ["Terms"],
     }),
+    updateTermsAndConditions: builder.mutation({
+      query: (body) => ({
+        url: "/dashboard/admin/terms-and-conditions/",
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Terms"],
+    }),
     getPendingRegistrations: builder.query({
       query: () => "/dashboard/home/pending-registrations/",
       providesTags: ["PendingRegistrations"],
@@ -178,6 +186,7 @@ export const dashboardApi = createApi({
 
 export const {
   useGetTermsAndConditionsQuery,
+  useUpdateTermsAndConditionsMutation,
   useGetDashboardDataQuery,
   useGetPendingRegistrationsQuery,
   useGetUserDetailsForApprovalQuery,

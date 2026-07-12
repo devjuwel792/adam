@@ -1,11 +1,23 @@
 import Avatar from "../../assets/images/Image-52.png";
 import { FaCheck, FaStar } from "react-icons/fa6";
-import { useGetAvailableUserDetailQuery } from "../../store/services/dashboardApi";
+import toast from "react-hot-toast";
+import { useGetAvailableUserDetailQuery, useAssignJobMutation } from "../../store/services/dashboardApi";
 
 const ProfessionalComparison = ({ isOpen, onClose, userId, job }) => {
   const { data: profile, isLoading, isError } = useGetAvailableUserDetailQuery(userId, {
     skip: !userId,
   });
+  const [assignJob, { isLoading: isAssigning }] = useAssignJobMutation();
+
+  const handleAssign = async () => {
+    try {
+      await assignJob({ job_id: job?.id, phlebotomist_id: userId }).unwrap();
+      toast.success("Job assigned successfully!");
+      onClose();
+    } catch {
+      toast.error("Failed to assign job.");
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -178,10 +190,11 @@ const ProfessionalComparison = ({ isOpen, onClose, userId, job }) => {
                   {/* Assign Job */}
                   <div className="mt-6">
                     <button
-                      onClick={onClose}
-                      className="w-full bg-[#C9A14A] text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                      onClick={handleAssign}
+                      disabled={isAssigning}
+                      className="w-full bg-[#C9A14A] text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Assign Job
+                      {isAssigning ? "Assigning..." : "Assign Job"}
                     </button>
                   </div>
                 </div>

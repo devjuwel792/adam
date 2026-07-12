@@ -96,6 +96,14 @@ export const dashboardApi = createApi({
       query: () => "/dashboard/job-matching/",
       providesTags: ["JobMatching"],
     }),
+    assignJob: builder.mutation({
+      query: ({ job_id, phlebotomist_id }) => ({
+        url: "/dashboard/job-matching/",
+        method: "POST",
+        body: { job_id, phlebotomist_id },
+      }),
+      invalidatesTags: ["JobMatching"],
+    }),
     getAvailableUsers: builder.query({
       query: () => "/dashboard/job-matching/available-users/",
       providesTags: ["JobMatching"],
@@ -180,6 +188,7 @@ export const {
   useGetDisputeDetailQuery,
   useUpdateDisputeMutation,
   useGetJobMatchingListQuery,
+  useAssignJobMutation,
   useGetAvailableUsersQuery,
   useGetAvailableUserDetailQuery,
   useGetPayrollListQuery,

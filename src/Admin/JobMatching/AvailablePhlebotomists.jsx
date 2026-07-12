@@ -4,7 +4,8 @@ import { useState } from "react";
 import { FaCertificate, FaLocationDot, FaStar } from "react-icons/fa6";
 import Avatar from "../../assets/images/Image-52.png";
 import ProfessionalComparison from "./ProfessionalComparison";
-import { useGetAvailableUsersQuery } from "../../store/services/dashboardApi";
+import toast from "react-hot-toast";
+import { useGetAvailableUsersQuery, useAssignJobMutation } from "../../store/services/dashboardApi";
 
 const AvailablePhlebotomists = ({ isOpen, onClose, job }) => {
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -13,6 +14,17 @@ const AvailablePhlebotomists = ({ isOpen, onClose, job }) => {
   const { data, isLoading, isError } = useGetAvailableUsersQuery(undefined, {
     skip: !isOpen,
   });
+  const [assignJob, { isLoading: isAssigning }] = useAssignJobMutation();
+
+  const handleAssign = async (userId) => {
+    try {
+      await assignJob({ job_id: job?.id, phlebotomist_id: userId }).unwrap();
+      toast.success("Job assigned successfully!");
+      onClose();
+    } catch {
+      toast.error("Failed to assign job.");
+    }
+  };
 
   const users = data?.results ?? [];
 
@@ -83,10 +95,11 @@ const AvailablePhlebotomists = ({ isOpen, onClose, job }) => {
                 </button>
                 {user.is_available ? (
                   <button
-                    onClick={() => setSelectedUserId(user.id)}
-                    className="flex-1 px-3 py-2 bg-yellow-600 text-white rounded-md text-sm font-medium hover:bg-yellow-700 transition-colors"
+                    onClick={() => handleAssign(user.id)}
+                    disabled={isAssigning}
+                    className="flex-1 px-3 py-2 bg-yellow-600 text-white rounded-md text-sm font-medium hover:bg-yellow-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Assign Job
+                    {isAssigning ? "Assigning..." : "Assign Job"}
                   </button>
                 ) : (
                   <button disabled className="flex-1 px-3 py-2 bg-gray-300 text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">

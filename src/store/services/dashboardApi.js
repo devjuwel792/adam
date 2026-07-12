@@ -4,8 +4,18 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms", "Analytics"],
   endpoints: (builder) => ({
+    getAnalytics: builder.query({
+      query: ({ job_type = "", business_name = "" } = {}) => {
+        const params = new URLSearchParams();
+        if (job_type && job_type !== "All") params.append("job_type", job_type);
+        if (business_name && business_name !== "All") params.append("business_name", business_name);
+        const qs = params.toString();
+        return `/dashboard/analytics-reporting/${qs ? `?${qs}` : ""}`;
+      },
+      providesTags: ["Analytics"],
+    }),
     getDashboardData: builder.query({
       query: () => "/dashboard/home/",
       providesTags: ["Dashboard"],
@@ -185,6 +195,7 @@ export const dashboardApi = createApi({
 });
 
 export const {
+  useGetAnalyticsQuery,
   useGetTermsAndConditionsQuery,
   useUpdateTermsAndConditionsMutation,
   useGetDashboardDataQuery,

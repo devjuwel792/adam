@@ -63,8 +63,8 @@ export const dashboardApi = createApi({
     }),
     updateJobStatus: builder.mutation({
       query: ({ job_id, status }) => ({
-        url: `/dashboard/job-managements/${job_id}/`,
-        method: "PATCH",
+        url: `/dashboard/job-managements/${job_id}/update-status/`,
+        method: "POST",
         body: { status },
       }),
       invalidatesTags: ["Jobs"],

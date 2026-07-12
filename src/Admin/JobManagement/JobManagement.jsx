@@ -12,6 +12,7 @@ const STATUS_OPTIONS = [
   { label: "All Status", value: "" },
   { label: "Draft", value: "draft" },
   { label: "Pending Approval", value: "pending_approval" },
+  { label: "Approved", value: "approved" },
   { label: "Open", value: "open" },
   { label: "In Progress", value: "in_progress" },
   { label: "Completed", value: "completed" },
@@ -21,6 +22,7 @@ const STATUS_OPTIONS = [
 const statusColors = {
   draft: "bg-gray-100 text-gray-600",
   pending_approval: "bg-yellow-100 text-yellow-700",
+  approved: "bg-teal-100 text-teal-700",
   open: "bg-blue-100 text-blue-700",
   in_progress: "bg-purple-100 text-purple-700",
   completed: "bg-green-100 text-green-700",

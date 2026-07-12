@@ -4,11 +4,15 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms"],
   endpoints: (builder) => ({
     getDashboardData: builder.query({
       query: () => "/dashboard/home/",
       providesTags: ["Dashboard"],
+    }),
+    getTermsAndConditions: builder.query({
+      query: () => "/dashboard/admin/terms-and-conditions/",
+      providesTags: ["Terms"],
     }),
     getPendingRegistrations: builder.query({
       query: () => "/dashboard/home/pending-registrations/",
@@ -173,6 +177,7 @@ export const dashboardApi = createApi({
 });
 
 export const {
+  useGetTermsAndConditionsQuery,
   useGetDashboardDataQuery,
   useGetPendingRegistrationsQuery,
   useGetUserDetailsForApprovalQuery,

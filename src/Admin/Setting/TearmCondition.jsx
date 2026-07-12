@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
 import PrivacyPolicy from "./Privacy";
 import RichTextEditor from "./RichTextEditor";
+import { useGetTermsAndConditionsQuery } from "../../store/services/dashboardApi";
 
 
 const TermsAndConditions = () => {
-  const [currentView, setCurrentView] = useState("terms"); // 'terms' or 'privacy'
+  const [currentView, setCurrentView] = useState("terms");
   const [isEditing, setIsEditing] = useState(false);
   const {
     data,
     error: termsError,
     isLoading: termsLoading,
-  } = {};
+  } = useGetTermsAndConditionsQuery();
 
-  const termsData = data?.content ? JSON.parse(data.content || "") : "";
-  console.log("🚀 ~ TermsAndConditions ~ termsData:", termsData)
+  const termsData = data?.content ? JSON.parse(data.content) : null;
 
-  const 
-    updateTermsAndConditions=null;
+  const updateTermsAndConditions = null;
   const [content, setContent] = useState({
     termsOfService: "",
     keyPoints: [],
@@ -72,7 +71,8 @@ const TermsAndConditions = () => {
     return <PrivacyPolicy onBack={handleBackToTerms} />;
   }
 
-  // Show Terms and Conditions (original component)
+  if (termsLoading) return <div className="p-6 text-gray-500">Loading...</div>;
+  if (termsError) return <div className="p-6 text-red-500">Failed to load terms.</div>;
   return (
     <div className=" rounded-lg shadow-sm ">
       {/* Header */}

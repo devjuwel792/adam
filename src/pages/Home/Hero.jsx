@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import heroImage from "../../assets/images/hero-image.png";
 import star from "../../assets/images/star.png";
 import user from "../../assets/images/user.png";
@@ -24,15 +25,17 @@ export function Hero() {
 
             {/* CTA buttons */}
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-7 justify-center lg:justify-start">
-              <button className="bg-gradient-to-r from-[#877018] to-[#C9A14A] text-white w-full sm:w-64 py-4 rounded-lg font-semibold text-lg">
-                Hire Healthcare Staff
-              </button>
-              <button
+              <Link to={"/schedule"} className="bg-gradient-to-r text-center from-[#877018] to-[#C9A14A] text-white w-full sm:w-64 py-4 rounded-lg font-semibold text-lg">
+
+                Book an Appointment Now
+
+              </Link>
+              {/* <button
                 variant="outline"
                 className="border border-[#877018] bg-gradient-to-r from-[#877018] to-[#C9A14A] bg-clip-text text-transparent w-full sm:w-64 py-4 rounded-lg font-semibold text-lg bg-transparent"
               >
                 Get Paid Shifts
-              </button>
+              </button> */}
             </div>
           </div>
 

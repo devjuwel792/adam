@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import cardIcon1 from "../../assets/images/services/card-icon1.png";
 import cardIcon2 from "../../assets/images/services/card-icon2.png";
 import card1 from "../../assets/images/services/card1.png";
@@ -105,9 +106,9 @@ export const OurServices = () => {
                 </p>
                 <div className="flex items-center gap-4 justify-center sm:justify-start mt-auto">
                   <img src={service.icon} alt="learn more icon" className="w-8 h-8" />
-                  <p className="text-lg md:text-xl" style={{ color: service.learnColor }}>
+                  <Link to={"/schedule"} className="text-lg md:text-xl" style={{ color: service.learnColor }}>
                     Learn more
-                  </p>
+                  </Link>
                 </div>
               </div>
               <img src={service.cardImg} alt={`${service.title} illustration`} className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 object-contain mt-6 sm:mt-0 sm:ml-4" />

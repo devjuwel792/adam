@@ -31,6 +31,13 @@ export const appointmentApi = createApi({
         url: "/appointments/create/",
         method: "POST",
         body,
+        formData: true,
+      }),
+    }),
+    confirmPaymentSuccess: builder.query({
+      query: (params) => ({
+        url: "/appointments/payment-success/",
+        params,
       }),
     }),
   }),
@@ -42,4 +49,5 @@ export const {
   useGetAppointmentDetailQuery,
   useAssignPhlebotomistMutation,
   useCreateAppointmentMutation,
+  useConfirmPaymentSuccessQuery,
 } = appointmentApi;

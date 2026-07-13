@@ -43,11 +43,19 @@ export function MedicalInformationSection({
               Prescription
             </label>
             <div className="border border-[#E5E7EB] rounded-md h-24 p-6 text-center flex flex-col items-center justify-center">
-              <button className="bg-[#C9A14A] text-white border border-[#C9A14A] rounded-lg px-4 py-1 flex items-center justify-center gap-1">
+              <label className="bg-[#C9A14A] text-white border border-[#C9A14A] rounded-lg px-4 py-1 flex items-center justify-center gap-1 cursor-pointer">
                 <Upload className="h-3 w-3 text-white" />
                 Upload
-              </button>
-              <p className="text-base text-[#ADAEBC] mt-2">PDF, JPG - Max 5MB</p>
+                <input
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  className="hidden"
+                  onChange={(e) => onInputChange("prescription", e.target.files[0] || null)}
+                />
+              </label>
+              <p className="text-base text-[#ADAEBC] mt-2">
+                {formData.prescription ? formData.prescription.name : "PDF, JPG - Max 5MB"}
+              </p>
             </div>
           </div>
         </div>

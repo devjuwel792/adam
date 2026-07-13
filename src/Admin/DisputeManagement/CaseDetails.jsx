@@ -61,7 +61,7 @@ function CaseDetails({ isOpen, reportId, onClose }) {
               <h2 className="text-xl font-semibold text-gray-900">Case Details</h2>
               <div className="flex items-center gap-4 mt-1 text-sm text-gray-500 border-b pb-2">
                 <span>Case ID: {data.case_id}</span>
-                <span className="capitalize">Status: {data.report_details?.status}</span>
+                <span className="capitalize">Status: {data.status_display}</span>
               </div>
 
               <div className="flex justify-between items-start gap-10 pt-3">
@@ -70,12 +70,12 @@ function CaseDetails({ isOpen, reportId, onClose }) {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Complaint Information</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Title:</span>
-                      <span className="text-gray-900">{data.report_details?.title}</span>
+                      <span className="text-gray-600">Filed At:</span>
+                      <span className="text-gray-900">{data.filed_at}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Reported User:</span>
-                      <span className="text-gray-500">{data.report_details?.reported_user}</span>
+                      <span className="text-gray-500">{data.complaint_information?.reported_user}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Type:</span>
@@ -83,7 +83,7 @@ function CaseDetails({ isOpen, reportId, onClose }) {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Reported By:</span>
-                      <span className="text-gray-500">{data.complaint_information?.reported_by}</span>
+                      <span className="text-gray-500">{data.complaint_information?.filed_by}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Platform:</span>
@@ -95,10 +95,10 @@ function CaseDetails({ isOpen, reportId, onClose }) {
                 {/* Report Content */}
                 <div className="flex-[2] p-4">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Report Summary</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">{data.report_content?.summary}</p>
-                  {data.report_content?.date_of_incident && (
+                  <p className="text-gray-700 text-sm leading-relaxed">{data.initial_report_summary}</p>
+                  {data.resolved_at && (
                     <p className="text-xs text-gray-400 mt-2">
-                      Incident: {new Date(data.report_content.date_of_incident).toLocaleDateString()}
+                      Resolved: {new Date(data.resolved_at).toLocaleDateString()}
                     </p>
                   )}
                 </div>
@@ -163,17 +163,17 @@ function CaseDetails({ isOpen, reportId, onClose }) {
                       className="text-gray-700 rounded-md p-3 border w-full text-[13px] leading-relaxed"
                       disabled={isUpdating}
                     />
-                    {data.admin_decision?.admin_notes && (
+                    {data.admin_notes && (
                       <p className="text-xs text-gray-400 mt-1">
-                        Previous notes: {data.admin_decision.admin_notes}
+                        Previous notes: {data.admin_notes}
                       </p>
                     )}
                   </div>
 
-                  {data.admin_decision?.recommended_action && (
+                  {data.decision_summary?.recommended_action && (
                     <div className="bg-[#ffe9b836] p-4 rounded-md">
                       <h3 className="text-lg font-medium text-gray-900 mb-2">Recommended Action</h3>
-                      <p className="text-gray-700 text-sm">{data.admin_decision.recommended_action}</p>
+                      <p className="text-gray-700 text-sm">{data.decision_summary.recommended_action}</p>
                     </div>
                   )}
 

@@ -23,6 +23,7 @@ export default function BloodDrawBooking() {
     locationType: "home",
     location: "",
     medications: "",
+    prescription: null,
     allergies: "",
     medicalConditions: [],
     specialRequests: "",
@@ -60,29 +61,30 @@ export default function BloodDrawBooking() {
       return;
     }
 
-    const apiBody = {
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-      email: formData.email,
-      phone_number: formData.phone,
-      dob: formatDate(formData.dateOfBirth),
-      gender: formData.gender,
-      service_package: formData.servicePackage ? Number(formData.servicePackage) : null,
-      appointment_date: formatDate(formData.appointmentDate),
-      start_time: formData.startTime,
-      end_time: formData.endTime,
-      location_type: formData.locationType,
-      location: formData.location,
-      current_medications: formData.medications,
-      known_allergies: formData.allergies,
-      medical_conditions: formData.medicalConditions.join(", "),
-      special_requests: formData.specialRequests,
-      email_result_notification: formData.emailNotifications,
-      sms_appointment_reminders: formData.smsReminders,
-    };
+    const body = new FormData();
+    body.append("first_name", formData.firstName);
+    body.append("last_name", formData.lastName);
+    body.append("email", formData.email);
+    body.append("phone_number", formData.phone);
+    body.append("dob", formatDate(formData.dateOfBirth));
+    body.append("gender", formData.gender);
+    body.append("service_package", Number(formData.servicePackage));
+    body.append("appointment_date", formatDate(formData.appointmentDate));
+    body.append("start_time", formData.startTime);
+    body.append("location_type", formData.locationType);
+    body.append("location", formData.location);
+    body.append("consent_communication", true);
+    if (formData.endTime) body.append("end_time", formData.endTime);
+    if (formData.medications) body.append("current_medications", formData.medications);
+    if (formData.prescription) body.append("prescription", formData.prescription);
+    if (formData.allergies) body.append("known_allergies", formData.allergies);
+    if (formData.medicalConditions.length) body.append("medical_conditions", formData.medicalConditions.join(", "));
+    if (formData.specialRequests) body.append("special_requests", formData.specialRequests);
+    body.append("email_result_notification", formData.emailNotifications);
+    body.append("sms_appointment_reminders", formData.smsReminders);
 
     try {
-      const response = await createAppointment(apiBody).unwrap();
+      const response = await createAppointment(body).unwrap();
       if (response.checkout_url) {
         window.location.href = response.checkout_url;
       }

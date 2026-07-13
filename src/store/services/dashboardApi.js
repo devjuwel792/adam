@@ -4,7 +4,7 @@ import { baseQueryWithReauth } from "../baseQuery";
 export const dashboardApi = createApi({
   reducerPath: "dashboardApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms", "Analytics", "Chats"],
+  tagTypes: ["Dashboard", "PendingRegistrations", "PendingDocuments", "UserDetails", "Jobs", "Users", "Disputes", "Reviews", "Payroll", "JobMatching", "Terms", "Analytics", "Chats", "ServicePackages", "ServiceFeatures"],
   endpoints: (builder) => ({
     getChatList: builder.query({
       query: () => "/communication/chats/",
@@ -59,8 +59,7 @@ export const dashboardApi = createApi({
     suspendUnsuspendUser: builder.mutation({
       query: ({ user_id, suspend }) => ({
         url: `/dashboard/home/suspend-unsuspend/${user_id}/`,
-        method: "patch",
-        body: { suspend },
+        method: "post",
       }),
       invalidatesTags: ["Dashboard"],
     }),
@@ -199,6 +198,64 @@ export const dashboardApi = createApi({
         "Users",
       ],
     }),
+    getServicePackages: builder.query({
+      query: () => "/dashboard/service-packages/",
+      providesTags: ["ServicePackages"],
+    }),
+    getServicePackage: builder.query({
+      query: (id) => `/dashboard/service-packages/${id}/`,
+      providesTags: (result, error, id) => [{ type: "ServicePackages", id }],
+    }),
+    createServicePackage: builder.mutation({
+      query: (formData) => ({
+        url: "/dashboard/service-packages/",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["ServicePackages"],
+    }),
+    updateServicePackage: builder.mutation({
+      query: ({ id, formData }) => ({
+        url: `/dashboard/service-packages/${id}/`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["ServicePackages"],
+    }),
+    deleteServicePackage: builder.mutation({
+      query: (id) => ({
+        url: `/dashboard/service-packages/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ServicePackages"],
+    }),
+    getServiceFeatures: builder.query({
+      query: () => "/dashboard/service-packages/features/",
+      providesTags: ["ServiceFeatures"],
+    }),
+    createServiceFeature: builder.mutation({
+      query: (body) => ({
+        url: "/dashboard/service-packages/features/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["ServiceFeatures", "ServicePackages"],
+    }),
+    updateServiceFeature: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `/dashboard/service-packages/features/${id}/`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["ServiceFeatures", "ServicePackages"],
+    }),
+    deleteServiceFeature: builder.mutation({
+      query: (id) => ({
+        url: `/dashboard/service-packages/features/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ServiceFeatures", "ServicePackages"],
+    }),
   }),
 });
 
@@ -236,4 +293,13 @@ export const {
   useGetUsersListQuery,
   useGetUserDetailQuery,
   useEditUserMutation,
+  useGetServicePackagesQuery,
+  useGetServicePackageQuery,
+  useCreateServicePackageMutation,
+  useUpdateServicePackageMutation,
+  useDeleteServicePackageMutation,
+  useGetServiceFeaturesQuery,
+  useCreateServiceFeatureMutation,
+  useUpdateServiceFeatureMutation,
+  useDeleteServiceFeatureMutation,
 } = dashboardApi;

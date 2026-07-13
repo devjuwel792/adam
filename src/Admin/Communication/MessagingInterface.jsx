@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { FaPaperPlane } from "react-icons/fa6";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useGetChatListQuery, useGetChatMessagesQuery } from "../../store/services/dashboardApi";
 
 const BASE_URL = (import.meta.env.VITE_BASE_URL || "").replace(/\/$/, "");
@@ -27,11 +28,12 @@ const formatTime = (iso) => {
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 };
 
-const MessagingInterface = ({ onPageShow }) => {
+const MessagingInterface = ({ initialPartnerId = null }) => {
   const { token, user } = useSelector((s) => s.auth);
   const adminId = user?.user_id;
+  const navigate = useNavigate();
 
-  const [selectedPartnerId, setSelectedPartnerId] = useState(null);
+  const [selectedPartnerId, setSelectedPartnerId] = useState(initialPartnerId);
   const [searchTerm, setSearchTerm] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -139,7 +141,7 @@ const MessagingInterface = ({ onPageShow }) => {
       {/* Top bar */}
       <div className="p-4 border-b flex justify-between items-center border-gray-200">
         <div className="flex">
-          <button onClick={onPageShow} className="font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">
+          <button onClick={() => navigate("/admin/communication?tab=reviews")} className="font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition-colors">
             Content
           </button>
           <button className="px-4 py-2 font-medium text-sm border-b-2 border-[#C9A14A] text-[#C9A14A] ml-6">

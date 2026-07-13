@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa6";
 import ContentReviewDetails from "./ContentReviewDetails";
 import { useGetReviewsListQuery } from "../../store/services/dashboardApi";
@@ -11,9 +12,10 @@ const statusClass = {
   rejected: "bg-red-100 text-red-800",
 };
 
-const Review = ({ onPageShow }) => {
+const Review = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedId, setSelectedId] = useState(null);
+  const navigate = useNavigate();
 
   const { data, isLoading, isError } = useGetReviewsListQuery();
 
@@ -46,7 +48,7 @@ const Review = ({ onPageShow }) => {
           Content
         </button>
         <button
-          onClick={onPageShow}
+          onClick={() => navigate("/admin/communication?tab=messages")}
           className="px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 ml-6"
         >
           Messages

@@ -309,7 +309,7 @@ const DetailedUserProfile = ({ userId, isOpen, onClose }) => {
                 { label: "Full Name", key: "full_name" },
                 { label: "Email", key: "email", type: "email" },
                 { label: "Phone Number", key: "phone_number" },
-                { label: "Date of Birth", key: "dob", type: "date" },
+                // { label: "Date of Birth", key: "dob", type: "date" },
               ].map(({ label, key, type = "text" }) => (
                 <div key={key}>
                   <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
@@ -322,7 +322,7 @@ const DetailedUserProfile = ({ userId, isOpen, onClose }) => {
                 </div>
               ))}
 
-              {header?.role?.toLowerCase() === "phlebotomist" && (
+              {header?.role?.toLowerCase() === "phlebotomist1" && (
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">License Number</label>

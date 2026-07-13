@@ -88,7 +88,7 @@ export function PersonalInformationSection({ formData, onInputChange }) {
         </div>
 
         {/* Date of Birth */}
-        <div>
+        {/* <div>
           <label
             htmlFor="dob"
             className="text-sm font-medium text-gray-700 mb-2 block"
@@ -109,7 +109,7 @@ export function PersonalInformationSection({ formData, onInputChange }) {
             />
             <Calendar className="absolute right-48 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           </div>
-        </div>
+        </div> */}
 
         {/* Gender */}
         <div>

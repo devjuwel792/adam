@@ -1,23 +1,18 @@
 "use client";
 
-import { useState } from "react";
-
+import { useSearchParams } from "react-router-dom";
 import Review from "./Review";
 import MessagingInterface from "./MessagingInterface";
 
-const Communication = ({ messageOpen }) => {
-  const [selectedComponent, setSelectedComponent] = useState("reviews");
+const Communication = () => {
+  const [searchParams] = useSearchParams();
+  const tab = searchParams.get("tab") ?? "reviews";
+  const userId = searchParams.get("userId") ? Number(searchParams.get("userId")) : null;
 
   return (
     <>
-      {selectedComponent === "reviews" && !messageOpen && (
-        <Review onPageShow={() => setSelectedComponent("message")} />
-      )}
-      {(selectedComponent === "message" || messageOpen) && (
-        <MessagingInterface
-          onPageShow={() => setSelectedComponent("reviews")}
-        />
-      )}
+      {tab === "reviews" && <Review />}
+      {tab === "messages" && <MessagingInterface initialPartnerId={userId} />}
     </>
   );
 };

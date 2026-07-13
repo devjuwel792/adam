@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaLocationDot, FaStar } from "react-icons/fa6";
 import { HiDocumentPlus } from "react-icons/hi2";
 import { PiTestTubeFill } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   useGetAppointmentDetailQuery,
@@ -11,6 +12,7 @@ import {
 
 const AppointmentDetails = ({ isOpen, onClose, appointmentId }) => {
   const [selectedPhlebotomistId, setSelectedPhlebotomistId] = useState("");
+  const navigate = useNavigate();
 
   const { data, isLoading, error } = useGetAppointmentDetailQuery(appointmentId, {
     skip: !appointmentId,
@@ -56,7 +58,18 @@ const AppointmentDetails = ({ isOpen, onClose, appointmentId }) => {
             <div className="space-y-6">
               {/* Patient Information */}
               <div className="shadow-sm border border-gray-100 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Patient Information</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Patient Information</h3>
+                  <button
+                    onClick={() => {
+                      onClose();
+                      navigate(`/admin/communication?tab=messages&userId=${data.patient?.id}`);
+                    }}
+                    className="flex items-center gap-1.5 text-sm px-3 py-1.5 bg-[#C9A14A] text-white rounded-lg hover:bg-amber-600"
+                  >
+                    💬 Message
+                  </button>
+                </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Name:</span>

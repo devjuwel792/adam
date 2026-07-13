@@ -20,9 +20,9 @@ export function ProvidersHero() {
 
             {/* CTA buttons */}
             <div className="flex justify-center lg:justify-start">
-              <button className="bg-gradient-to-r from-[#877018] to-[#C9A14A] text-white w-full sm:w-72 py-4 rounded-lg font-semibold text-lg">
+              {/* <button className="bg-gradient-to-r from-[#877018] to-[#C9A14A] text-white w-full sm:w-72 py-4 rounded-lg font-semibold text-lg">
                 Start Partnership Application
-              </button>
+              </button> */}
             </div>
           </div>
 

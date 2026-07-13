@@ -126,9 +126,9 @@ const HealthcareProcess = () => {
       </div>
 
       {/* Transparent Pricing Section */}
-      <div className="py-16 md:py-20 lg:py-24 bg-white">
+      {/* <div className="py-16 md:py-20 lg:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
+          
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-[#2c2c2c] mb-4">
               Transparent Pricing
@@ -138,7 +138,7 @@ const HealthcareProcess = () => {
             </p>
           </div>
 
-          {/* Pricing Cards */}
+        
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {pricingPlans.map((plan, index) => (
               <div
@@ -149,7 +149,7 @@ const HealthcareProcess = () => {
                     : "bg-white border border-gray-200 shadow-sm"
                 }`}
               >
-                {/* Most Popular Badge */}
+             
                 {plan.isPopular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <span className="bg-white text-[#C9A14A] text-xs font-semibold px-3 py-1 rounded-full border border-[#C9A14A]">
@@ -158,7 +158,7 @@ const HealthcareProcess = () => {
                   </div>
                 )}
 
-                {/* Plan Type */}
+        
                 <h3
                   className={`text-2xl font-bold mb-4 ${
                     plan.isPopular ? "text-white" : "text-[#2c2c2c]"
@@ -167,7 +167,7 @@ const HealthcareProcess = () => {
                   {plan.type}
                 </h3>
 
-                {/* Price */}
+               
                 <div className="mb-6">
                   <span
                     className={`text-3xl sm:text-4xl font-bold ${
@@ -185,7 +185,7 @@ const HealthcareProcess = () => {
                   </span>
                 </div>
 
-                {/* Features */}
+         
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, featureIndex) => (
                     <li
@@ -208,7 +208,7 @@ const HealthcareProcess = () => {
                   ))}
                 </ul>
 
-                {/* Button */}
+                
                 <button
                   className={`w-full font-semibold py-3 px-4 rounded-lg transition-colors duration-200 ${
                     plan.isPopular
@@ -222,7 +222,7 @@ const HealthcareProcess = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

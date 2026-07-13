@@ -21,7 +21,7 @@ export default function PartnershipApplication() {
 
   return (
     <div className="bg-gray-50 py-16 md:py-20 lg:py-24">
-      <div className="text-center mb-12 md:mb-16 px-4">
+      {/* <div className="text-center mb-12 md:mb-16 px-4">
         <h2 className="text-3xl sm:text-4xl font-bold text-[#111827] mb-4">
           Partnership Application
         </h2>
@@ -31,7 +31,7 @@ export default function PartnershipApplication() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6 p-6 sm:p-8 bg-white rounded-2xl shadow-lg max-w-4xl mx-auto">
-        {/* Organization + Contact Person */}
+    
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label
@@ -70,7 +70,7 @@ export default function PartnershipApplication() {
           </div>
         </div>
 
-        {/* Email + Phone */}
+     
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <label
@@ -110,7 +110,7 @@ export default function PartnershipApplication() {
           </div>
         </div>
 
-        {/* Service Model */}
+        
         <div className="space-y-2">
           <label
             htmlFor="serviceModel"
@@ -134,7 +134,7 @@ export default function PartnershipApplication() {
           </select>
         </div>
 
-        {/* Patient Volume */}
+        
         <div className="space-y-2">
           <label
             htmlFor="patientVolume"
@@ -159,7 +159,7 @@ export default function PartnershipApplication() {
           </select>
         </div>
 
-        {/* Additional Info */}
+       
         <div className="space-y-2">
           <label
             htmlFor="additionalInfo"
@@ -178,7 +178,7 @@ export default function PartnershipApplication() {
           />
         </div>
 
-        {/* Terms Checkbox */}
+    
         <div className="flex items-center space-x-2">
           <input
             id="terms"
@@ -201,7 +201,7 @@ export default function PartnershipApplication() {
           </label>
         </div>
 
-        {/* Submit Button */}
+      
         <button
           type="submit"
           className="w-full bg-[#C9A14A] hover:bg-amber-600 text-white font-semibold text-lg py-3 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
@@ -209,7 +209,7 @@ export default function PartnershipApplication() {
         >
           Submit Partnership Application
         </button>
-      </form>
+      </form> */}
     </div>
   );
 }

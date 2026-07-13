@@ -1,10 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-const baseUrl = import.meta.env.VITE_BASE_URL;
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "../baseQuery";
 
 export const appointmentApi = createApi({
   reducerPath: "appointmentApi",
-  baseQuery: fetchBaseQuery({ baseUrl }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Appointments"],
   endpoints: (builder) => ({
     getServicePackages: builder.query({
@@ -17,6 +16,9 @@ export const appointmentApi = createApi({
     getAppointmentDetail: builder.query({
       query: (id) => `/appointments/detail/${id}/`,
       providesTags: (result, error, id) => [{ type: "Appointments", id }],
+    }),
+    getAllPhlebotomists: builder.query({
+      query: () => "/dashboard/appointment-managements/all-phlebotomists/",
     }),
     assignPhlebotomist: builder.mutation({
       query: ({ appointment_id, user_id }) => ({
@@ -47,6 +49,7 @@ export const {
   useGetServicePackagesQuery,
   useGetAppointmentListQuery,
   useGetAppointmentDetailQuery,
+  useGetAllPhlebotomistsQuery,
   useAssignPhlebotomistMutation,
   useCreateAppointmentMutation,
   useConfirmPaymentSuccessQuery,

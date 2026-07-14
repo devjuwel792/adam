@@ -45,7 +45,7 @@ export const dashboardApi = createApi({
       providesTags: ["PendingRegistrations"],
     }),
     getUserDetailsForApproval: builder.query({
-      query: (user_id) => `/dashboard/home/user-details-for-approval/${user_id}/`,
+      query: (user_id) => `/dashboard/home/user-details-for-approval/${user_id}`,
       providesTags: (result, error, user_id) => [{ type: "UserDetails", id: user_id }],
     }),
     approveUser: builder.mutation({
